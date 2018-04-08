@@ -1,0 +1,11 @@
+<!--bleSearch.wxml-->
+<view class="container">
+    <view wx:for="{{bleDevice}}" class="con">
+        <button id='{{item.deviceId}}' text='{{item.name}}'></button>
+    </view>
+</view>
+
+
+
+
+
