@@ -1,8 +1,12 @@
 <!--bleSearch.wxml-->
-<view class="container">
-    <view wx:for="{{bleDevice}}" class="con">
-        <button id='{{item.deviceId}}' text='{{item.name}}'></button>
+<view class="deviceListContainer">
+    <label class='head_tips'>请选择名称为"NB-IoT"开头的设备进行连接</label>
+    <label class='head_tips'>测试仪名称为"NB-IoT_ICCID后四位"</label>
+    <view class="deviceListView">
+        <label wx:for="{{bleDevice}}" class='deviceListLabel' id='{{item.deviceId}}@{{item.name}}' bindtap='onBleDeviceClicked'>{{index + 1}}. {{item.name}}</label>
     </view>
+    <!-- <button bindtap='backHomePage' type='primary' class='backButton'>返回首页</button> -->
+    <view bindtap='backHomePage' class='backView'>返回首页</view>
 </view>
 
 

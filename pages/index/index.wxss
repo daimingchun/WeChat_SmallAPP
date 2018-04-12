@@ -12,6 +12,11 @@
     background-color: white;
 }
 
+.bleIconImage {
+    width: 30rpx;
+    height: 30rpx;
+}
+
 .bleState {
     width: 100%;
     background-color: white;
@@ -24,10 +29,16 @@
     margin-bottom:10rpx; 
 }
 
-
 .bleState_text {
     padding: 10rpx;
     font-size: 24rpx;
+}
+
+.bleState_disconnect {
+    color: red;
+    text-decoration: underline;
+    font-size: 24rpx;
+    padding-left: 20rpx;
 }
 
 .iconView {
@@ -39,9 +50,9 @@
 .icon {
     width: 250rpx;
     height: 200rpx;
-    /* border-top: 1rpx groove lightgray; 
-    border-bottom: 1rpx groove gray; 
-    border-right: 1rpx groove lightgray; */
+    border-top: 1rpx outset lightgray; 
+    border-bottom: 1rpx outset gray; 
+    border-right: 1rpx outset lightgray; 
     display: flex;
     flex-direction: column;
     justify-content: center;

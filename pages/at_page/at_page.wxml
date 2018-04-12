@@ -1,0 +1,21 @@
+<!-- at_page.wxml -->
+
+<view class='container' id='atPage'>
+    <!-- <label class='label_tips'>接收区：</label> -->
+    <view class='recView'>
+        <!-- <textarea class='textarea' disabled='true'>{{bleShowStr}}</textarea> -->
+        <text class='text'>{{bleShowStr}}</text>
+    </view>
+    
+    <form class='form' bindsubmit='SendAtCmd'>
+        <input name="atCmd" placeholder='输入AT指令' type='text' class='input' adjust-position='true'></input>
+        <checkbox class='checkbox' name="withEnter" checked='true'>携带回车换行符[CR][LF]</checkbox>
+        <button formType="submit" type="primary" class='form_button'>发送</button>
+    </form>
+    <button type='warn' bindtap='backHomePage' class='button'>返回首页</button>
+    <button type='warn' bindtap='clearRecvMSG' class='button'>清空接收</button>
+</view>
+
+
+
+

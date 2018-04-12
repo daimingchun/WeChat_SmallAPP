@@ -1,5 +1,4 @@
-/* signal.wxss */
-
+/* pages/deviceInfo/deviceInfo.wxss */
 
 .MainContainer {
     width: 100%;
@@ -10,6 +9,11 @@
     align-items: center;
 }
 
+.image {
+    width: 150rpx;
+    height: 150rpx;
+    margin-right: 20rpx;
+}
 
 .blockView {
     display: flex;
@@ -22,12 +26,6 @@
     width: 90%;
 }
 
-.image {
-    width: 150rpx;
-    height: 150rpx;
-    margin-right: 20rpx;
-}
-
 .TextView {
     display: flex;
     flex-direction: column;
@@ -37,7 +35,10 @@
 }
 
 .label {
-    margin: 5rpx;
-    font-size: 24rpx;
+    margin: 10rpx;
+    font-size: 30rpx;
 }
+
+
+
 

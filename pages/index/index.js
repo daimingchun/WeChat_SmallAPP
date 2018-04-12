@@ -2,120 +2,131 @@
 //获取应用实例
 const app = getApp()
 
+var util = require('../../utils/util.js');  // 引用公共接口
+
+
 Page({
-  data: {
-      BleConnectState: "无连接设备",
-  },
+    data: {
+        BleConnectState: getApp().globalData.bleDeviceConnectState,     // 蓝牙连接状态
+        BleConnectName: getApp().globalData.bleConnectDeviceName,       // 蓝牙连接设备名称
+    },
+    // 搜索蓝牙设备界面
+    searchBleDevice: function() {
+        wx.navigateTo({
+            url: '../bleSearch/bleSearch',
+        })
+    },
+    // 进入AT模式页面
+    cm_enter_atMode: function() {
+        wx.navigateTo({
+            url: '../at_page/at_page',
+        })
+    },
+    // 进入设备信息界面
+    cm_enter_deviceInfoPage: function() {
+        wx.navigateTo({
+            url: '../deviceInfo/deviceInfo',
+        })
+    },
+    // 进入信号参数界面
+    cm_enter_signalPage: function(){
+        wx.navigateTo({
+            url: '../signal/signal',
+        })
+    },
+    // 进入驻网测试界面
+    cm_enter_registerPage: function() {
+        wx.navigateTo({
+            url: '../networkRegister/networkRegister',
+        })
+    },
+    // 进入网络延时界面
+    cm_enter_networkDelayPage: function() {
+        wx.navigateTo({
+            url: '../networkDelay/networkDelay',
+        })
+    },
+    // 进入综合测试界面
+    cm_enter_comprehensiveTestPage() {
+        wx.navigateTo({
+            url: '../networkRegister/networkRegister',
+        })
+    },
+    // 断开蓝牙连接
+    disconnectBleDevice: function() {
+        var that = this;
+        wx.showLoading({
+            title: '断开连接',
+        })
+        // 断开连接
+        wx.closeBLEConnection({
+            deviceId: app.globalData.bleConnectedDeviceId,
+            success: function(res) {
+                console.log(res);
+                app.globalData.bleConnectedDeviceId = null;
+                app.globalData.bleConnectDeviceName = null;
+                app.globalData.bleDeviceConnectState= false;
+                that.setData({
+                    BleConnectState: getApp().globalData.bleDeviceConnectState,
+                    BleConnectName: getApp().globalData.bleConnectDeviceName,
+                })
+                // 提示成功
+                wx.hideLoading();
+                wx.showToast({
+                    title: '断开成功',
+                    icon:'success'
+                })
+            },
+            fail: function(res) {
+                // 提示失败
+                wx.hideLoading();
+                wx.showToast({
+                    title: '断开失败',
+                    icon: 'fail'
+                })
+            }
+        })
+    },
 
-  searchBleDevice: function() {
-    console.log("searchBleDevice button clicked")
-    console.log(this.text);
-    wx.navigateTo({
-        url: '../bleSearch/bleSearch',
-    })
-  },
+    //事件处理函数
+    bindViewTap: function() {
+        wx.redirectTo({
+            url: '../logs/logs',
+        })
+    },
 
-  //事件处理函数
-  bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
-  onLoad: function () {
+    onShow: function () {
+        var that = this;
+        this.setData({
+            BleConnectState: getApp().globalData.bleDeviceConnectState,
+            BleConnectName:  getApp().globalData.bleConnectDeviceName,
+        })
 
-
-    // wx.openBluetoothAdapter({
-    //   success: function (res) {
-    //     console.log(res)
-
-    //     wx.startBluetoothDevicesDiscovery({
-    //       success: function (res) {
-    //         console.log(res)
-
-    //         setTimeout(function () {
-
-    //           wx.stopBluetoothDevicesDiscovery({
-    //             success: function (res) {
-    //               console.log(res)
-    //             }
-    //           })
-
-    //           wx.createBLEConnection({
-    //             // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接 
-    //             deviceId: "0A39D3C6-1A51-2DCE-B5CF-8A280E56BA0B",
-    //             success: function (res) {
-    //               console.log(res)
-    //             },
-
-              
-    //           })
-
-
-    //           setTimeout(function () {
-    //             wx.getBLEDeviceServices({
-    //               // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接 
-    //               deviceId: "0A39D3C6-1A51-2DCE-B5CF-8A280E56BA0B",
-    //               success: function (res) {
-    //                 console.log('device services:', res.services)
-    //                 wx.getBLEDeviceCharacteristics({
-    //                   // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
-    //                   deviceId: "0A39D3C6-1A51-2DCE-B5CF-8A280E56BA0B",
-    //                   // 这里的 serviceId 需要在上面的 getBLEDeviceServices 接口中获取
-    //                   serviceId: "0003CDD0-0000-1000-8000-00805F9B0131",
-    //                   success: function (res) {
-    //                     console.log('device getBLEDeviceCharacteristics:', res.characteristics)
-
-    //                     let buffer = new ArrayBuffer(5)
-    //                     let dataView = new DataView(buffer)
-    //                     dataView.setUint8(0, 0x31)
-    //                     dataView.setUint8(1, 0x32)
-    //                     dataView.setUint8(2, 0x33)
-    //                     dataView.setUint8(3, 0x34)
-    //                     dataView.setUint8(4, 0x35)
-
-    //                     wx.writeBLECharacteristicValue({
-    //                       // 这里的 deviceId 需要在上面的 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
-    //                       deviceId: "0A39D3C6-1A51-2DCE-B5CF-8A280E56BA0B",
-    //                       // 这里的 serviceId 需要在上面的 getBLEDeviceServices 接口中获取
-    //                       serviceId: "0003CDD0-0000-1000-8000-00805F9B0131",
-    //                       // 这里的 characteristicId 需要在上面的 getBLEDeviceCharacteristics 接口中获取
-    //                       characteristicId: "0003CDD2-0000-1000-8000-00805F9B0131",
-    //                       // 这里的value是ArrayBuffer类型
-    //                       value: buffer,
-    //                       success: function (res) {
-    //                         console.log('writeBLECharacteristicValue success', res.errMsg)
-    //                       }
-    //                     })
-
-    //                   }
-    //                 })
-    //               },
-
-    //               complete: function (res) {
-    //                 console.log(res)
-    //               }
-    //             })
-
-    //           }, 2000)
-
-    //         }, 5000) //延迟时间 这里是1秒  
-    //       }
-    //     })
-    //   }
-    // })
-
-    
-
-  },
-  getUserInfo: function(e) {
-    console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
-  },
+        wx.onBLEConnectionStateChange(function (res) {
+            // 该方法回调中可以用于处理连接意外断开等异常情况
+            console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`)
+            // 设备连接异常断开
+            if (!res.connected)
+            {
+                // 更新连接设备状态信息
+                app.globalData.bleConnectedDeviceId     = null;
+                app.globalData.bleConnectDeviceName     = null;
+                app.globalData.bleDeviceConnectState    = false;
+                that.setData({
+                    BleConnectState: getApp().globalData.bleDeviceConnectState,
+                    BleConnectName: getApp().globalData.bleConnectDeviceName,
+                })
+            }
+        })
+        // 断开时更新页面连接状态显示
+        if (that.data.BleConnectState)
+        {
+            wx.onBLECharacteristicValueChange(function(res){
+                console.log(`characteristic ${res.characteristicId} has changed, now is ${res.value}`);
+                console.log(util.hexCharCodeToStr(util.ab2hex(res.value)));
+            })
+        }
+    },
 })
-
 
 
