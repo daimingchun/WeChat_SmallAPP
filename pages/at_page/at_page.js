@@ -3,7 +3,6 @@
 const app = getApp();
 
 var util = require('../../utils/util.js');
-var xml  = require('../../xmllib/dom-parser.js');
 
 Page({
 
@@ -124,9 +123,6 @@ Page({
             if((that.data.bleRecvStr).indexOf("<Response>") != -1 && (that.data.bleRecvStr).indexOf("</Response>") != -1) {
                 if ((that.data.bleRecvStr).indexOf("<AT>") != -1 && (that.data.bleRecvStr).indexOf("</AT>") != -1)
                 {
-                    // var xmlParser = new xml.DOMParser();
-                    // var doc = xmlParser.parseFromString(that.data.bleRecvStr);
-                    // var content = doc.getElementsByTagName('AT')[0];
                     var head = (that.data.bleRecvStr).indexOf("<AT>") + 4;
                     var end = (that.data.bleRecvStr).indexOf("</AT>");
                     that.setData({

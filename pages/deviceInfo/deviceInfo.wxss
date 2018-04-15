@@ -7,6 +7,7 @@
     flex-direction: column;
     align-content: center;
     align-items: center;
+    margin-bottom: 150rpx;
 }
 
 .image {
@@ -39,6 +40,19 @@
     font-size: 30rpx;
 }
 
+.backView {
+    width: 100%;
+    height: 100rpx;
+    background-color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    /* border-top: 1rpx groove gray; */
+}
 
 
 

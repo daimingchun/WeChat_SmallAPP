@@ -1,6 +1,3 @@
-/* signal.wxss */
-
-
 .MainContainer {
     width: 100%;
     background-color: white;
@@ -10,34 +7,61 @@
     align-items: center;
 }
 
+.mainPage {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    margin-bottom: 120rpx;
+}
 
-.blockView {
+.canvas {
+    width: 95%;
+    height: 180px;
+    /* border: 1rpx inset gray; */
+    margin-top: 10rpx;
+}
+
+.label {
+    margin: 10rpx;
+    font-size: 24rpx;
+}
+
+.tableView {
+    width: 95%;
+    background-color: #1C86EE;
     display: flex;
     flex-direction: row;
     align-content: center;
     align-items: center;
-    margin-top: 20rpx;
-    padding: 20rpx;
-    border: 1rpx groove lightgray;
-    width: 90%;
+    padding: 10rpx;
+    margin-top: 10rpx;
 }
 
-.image {
-    width: 150rpx;
-    height: 150rpx;
-    margin-right: 20rpx;
+.tableLabel {
+    width: 47.5%;
+    font-size: 24rpx;
+    background-color: #1C86EE;
+    /* padding: 10rpx; */
+    color: white;
 }
 
-.TextView {
+
+.backView {
+    width: 100%;
+    height: 100rpx;
+    background-color: red;
     display: flex;
     flex-direction: column;
-     align-content: left;
-     align-items: left;
-    /* height: 200rpx; */
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    /* z-index: -1; */
+    /* margin-top: 120rpx; */
+    /* border-top: 1rpx groove gray; */
 }
 
-.label {
-    margin: 5rpx;
-    font-size: 24rpx;
-}
 

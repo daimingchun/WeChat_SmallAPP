@@ -1,1 +1,17 @@
 /* pages/networkRegister/networkRegister.wxss */
+
+.MainContainer {
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
+
+/* 例如设计图尺寸为320 x 300 */
+.canvas {
+    width: 320px;
+    height: 300px;
+    /* transform: scale(0.5) */
+}

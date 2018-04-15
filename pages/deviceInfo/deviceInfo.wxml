@@ -26,4 +26,6 @@
         </view>
     </view>
 
+    <view bindtap='backHomePage' class='backView'>返回首页</view>
+
 </view>

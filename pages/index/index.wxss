@@ -79,11 +79,11 @@
     justify-content: left;
     align-items: center;
     border-bottom: 1rpx groove lightgray;
-    padding-left: 10rpx;
+    /* padding-left: 10rpx; */
 }
 
 .history_label {
-    padding: 10rpx;
+     padding: 10rpx; 
     font-size: 24rpx;
 }
 

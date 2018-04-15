@@ -1,16 +1,56 @@
-<!-- signal.wxml -->
-<view class='MainContainer'>
+<view class="MainContainer">
+<view class='mainPage'>
 
-    <view class='blockView'>
-        <image src='../image/radioInfo.jpg' mode='aspectFit' class='image'></image>
-        <view class='TextView'>
-            <label class='label'>CSQ  : {{ICCID}}</label>
-            <label class='label'>SNR  : {{IMSI}}</label>
-            <label class='label'>RSRQ : {{IMSI}}</label>
-            <label class='label'>RSSI : {{IMSI}}</label>
-            <label class='label'>ECL  : {{IMSI}}</label>
-        </view>
+    <canvas disable-scroll="true" class='canvas' canvas-id="csqCanvas"></canvas>
+    <!-- <label class='label'>CSQ信号强度</label> -->
+    <canvas disable-scroll="true" class='canvas' canvas-id="snrCanvas"></canvas>
+    <!-- <label class='label'>SNR信噪比</label> -->
+    <canvas disable-scroll="true" class='canvas' canvas-id="rsrqCanvas"></canvas>
+    <!-- <label class='label'>RSRQ参考信号接收质量</label> -->
+    
+    <view class='tableView'>
+        <label class='tableLabel'>CSQ</label>
+        <label class='tableLabel'>{{csq}}</label>
     </view>
-
-
+    <view class='tableView'>
+        <label class='tableLabel'>SNR</label>
+        <label class='tableLabel'>{{snr}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>RSRQ</label>
+        <label class='tableLabel'>{{rsrq}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>EARFCN</label>
+        <label class='tableLabel'>{{earfcn}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>ECL</label>
+        <label class='tableLabel'>{{ecl}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>PLMN</label>
+        <label class='tableLabel'>{{plmn}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>BAND</label>
+        <label class='tableLabel'>{{band}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>T3324</label>
+        <label class='tableLabel'>{{t3324}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>T3412</label>
+        <label class='tableLabel'>{{t3412}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>CELL ID</label>
+        <label class='tableLabel'>{{cellid}}</label>
+    </view>
 </view>
+<!-- <cover-view bindtap='backHomePage' class='backView'>返回首页</cover-view> -->
+ <view bindtap='backHomePage' class='backView'>返回首页</view> 
+</view>
+
+

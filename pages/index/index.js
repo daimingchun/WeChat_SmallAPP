@@ -12,43 +12,43 @@ Page({
     },
     // 搜索蓝牙设备界面
     searchBleDevice: function() {
-        wx.navigateTo({
+        wx.redirectTo({
             url: '../bleSearch/bleSearch',
         })
     },
     // 进入AT模式页面
     cm_enter_atMode: function() {
-        wx.navigateTo({
+        wx.redirectTo({
             url: '../at_page/at_page',
         })
     },
     // 进入设备信息界面
     cm_enter_deviceInfoPage: function() {
-        wx.navigateTo({
+        wx.redirectTo({
             url: '../deviceInfo/deviceInfo',
         })
     },
     // 进入信号参数界面
     cm_enter_signalPage: function(){
-        wx.navigateTo({
+        wx.redirectTo({
             url: '../signal/signal',
         })
     },
     // 进入驻网测试界面
     cm_enter_registerPage: function() {
-        wx.navigateTo({
+        wx.redirectTo({
             url: '../networkRegister/networkRegister',
         })
     },
     // 进入网络延时界面
     cm_enter_networkDelayPage: function() {
-        wx.navigateTo({
+        wx.redirectTo({
             url: '../networkDelay/networkDelay',
         })
     },
     // 进入综合测试界面
     cm_enter_comprehensiveTestPage() {
-        wx.navigateTo({
+        wx.redirectTo({
             url: '../networkRegister/networkRegister',
         })
     },

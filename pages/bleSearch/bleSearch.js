@@ -104,7 +104,7 @@ Page({
         wx.hideLoading();
         // 显示连接提示框
         wx.showLoading({
-            title: '正在连接...',
+            title: '正在连接',
         })
        
         var targetDeviceId = e.target.id.split('@')[0];

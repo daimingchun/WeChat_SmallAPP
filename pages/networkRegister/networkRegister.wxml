@@ -1,2 +1,6 @@
 <!--pages/networkRegister/networkRegister.wxml-->
-<text>pages/networkRegister/networkRegister.wxml</text>
+<view class='MainContainer'>
+<canvas id='lineCanvas' canvas-id='lineCanvas' class='canvas'></canvas>
+<button bindtap='addTestData'>addTestData</button>
+</view>
+
