@@ -4,7 +4,7 @@
         <image src='../image/simIcon.jpg' mode='aspectFit' class='image'></image>
         <view class='TextView'>
             <label class='label'>ICCID: {{ICCID}}</label>
-            <label class='label'>IMSI: {{IMSI}}</label>
+            <label class='label'>IMSI : {{IMSI}}</label>
         </view>
     </view>
 

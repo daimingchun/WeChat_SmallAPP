@@ -1,0 +1,103 @@
+.MainContainer {
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    margin-top: 40rpx;
+    margin-bottom: 120rpx;
+}
+
+.mainPage {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    margin-bottom: 120rpx;
+}
+
+.canvas {
+    width: 100%;
+    height: 181px;
+    /* border: 1rpx groove gray;  */
+    margin-top: 40px;
+}
+
+.label {
+    margin: 10rpx;
+    font-size: 24rpx;
+}
+
+.tableView {
+    width: 95%;
+    background-color: #1C86EE;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    padding: 10rpx;
+    margin-top: 10rpx;
+}
+
+.tableLabel {
+    width: 47.5%;
+    font-size: 24rpx;
+    background-color: #1C86EE;
+    /* padding: 10rpx; */
+    color: white;
+}
+
+
+.backView {
+    width: 100%;
+    height: 100rpx;
+    background-color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    /* z-index: -1; */
+    /* margin-top: 120rpx; */
+    /* border-top: 1rpx groove gray; */
+}
+
+.introductionText {
+    font-size: 24rpx;
+    width: 95%;
+}
+
+.inputTimeView {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    align-content: left;
+}
+
+.slider {
+    width: 95%;
+}
+
+.testButton {
+    width: 95%;
+    margin-top: 40rpx;
+    margin-bottom: 40rpx;
+}
+
+.progress {
+    width: 95%;
+    margin-bottom: 40rpx;
+}
+
+.titleText {
+    font-size: 24rpx;
+    margin-top: 40rpx;
+    width: 95%;
+}
+
+
+

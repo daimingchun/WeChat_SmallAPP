@@ -11,7 +11,7 @@ App({
                 console.log(res);
             }
         })
-        console.log('App Launch')
+        console.log('App Launched!')
         this.deviceInfo = this.promise.getDeviceInfo();
     },
     globalData: {

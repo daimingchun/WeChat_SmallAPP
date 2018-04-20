@@ -1,7 +1,7 @@
 <!--bleSearch.wxml-->
 <view class="deviceListContainer">
-    <label class='head_tips'>请选择名称为"NB-IoT"开头的设备进行连接</label>
-    <label class='head_tips'>测试仪名称为"NB-IoT_ICCID后四位"</label>
+    <label class='head_tips'>请选择名称为"D5310A"开头的设备进行连接</label>
+    <label class='head_tips'>测试仪名称为"D5310A+IMEI后四位"</label>
     <view class="deviceListView">
         <label wx:for="{{bleDevice}}" class='deviceListLabel' id='{{item.deviceId}}@{{item.name}}' bindtap='onBleDeviceClicked'>{{index + 1}}. {{item.name}}</label>
     </view>

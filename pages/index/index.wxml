@@ -7,7 +7,7 @@
         <image src='../image/bluetooth.jpg' mode='aspectFit' class='bleIconImage'></image>
         <label class='bleState_text'>蓝牙状态：</label>
         <label wx:if="{{BleConnectState}}" class='bleState_text'>{{BleConnectName}}(已连接)</label>
-        <label wx:else class='bleState_text'>未连接到测试仪</label>
+        <label wx:else class='bleState_test_warn'>未连接到测试仪</label>
         <label wx:if ='{{BleConnectState}}' class='bleState_disconnect' bindtap='disconnectBleDevice'>断开连接</label>
     </view>
     <view class='iconView'>

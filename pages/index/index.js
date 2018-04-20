@@ -10,6 +10,7 @@ Page({
         BleConnectState: getApp().globalData.bleDeviceConnectState,     // 蓝牙连接状态
         BleConnectName: getApp().globalData.bleConnectDeviceName,       // 蓝牙连接设备名称
     },
+
     // 搜索蓝牙设备界面
     searchBleDevice: function() {
         wx.redirectTo({
@@ -49,7 +50,7 @@ Page({
     // 进入综合测试界面
     cm_enter_comprehensiveTestPage() {
         wx.redirectTo({
-            url: '../networkRegister/networkRegister',
+            url: '../ComprehensiveTest/comprehensiveTest',
         })
     },
     // 断开蓝牙连接

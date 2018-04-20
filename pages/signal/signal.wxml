@@ -9,8 +9,8 @@
     <!-- <label class='label'>RSRQ参考信号接收质量</label> -->
     
     <view class='tableView'>
-        <label class='tableLabel'>CSQ</label>
-        <label class='tableLabel'>{{csq}}</label>
+        <label class='tableLabel'>RSSI</label>
+        <label class='tableLabel'>{{csq}}dbm</label>
     </view>
     <view class='tableView'>
         <label class='tableLabel'>SNR</label>

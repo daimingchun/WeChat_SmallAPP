@@ -1,20 +1,33 @@
 {
-  "pages":[
-    "pages/index/index",
-    "pages/logs/logs",
-    "pages/bleSearch/bleSearch",
-    "pages/ComprehensiveTest/comprehensiveTest",
-    "pages/at_page/at_page",
-    "pages/deviceInfo/deviceInfo",
-    "pages/signal/signal",
-    "pages/networkRegister/networkRegister",
-    "pages/networkDelay/networkDelay"
-  ],
-  "window":{
-    "backgroundTextStyle":"light",
-    "backgroundColor": "#C9C9C9",
-    "navigationBarBackgroundColor": "#1C86EE",
-    "navigationBarTitleText": "NB-IoT网络测试",
-    "navigationBarTextStyle":"white"
-  }
+    "pages": [
+        "pages/index/index",
+        "pages/logs/logs",
+        "pages/bleSearch/bleSearch",
+        "pages/ComprehensiveTest/comprehensiveTest",
+        "pages/at_page/at_page",
+        "pages/deviceInfo/deviceInfo",
+        "pages/signal/signal",
+        "pages/networkRegister/networkRegister",
+        "pages/networkDelay/networkDelay"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "backgroundColor": "#C9C9C9",
+        "navigationBarBackgroundColor": "#1C86EE",
+        "navigationBarTitleText": "NB-IoT网络测试",
+        "navigationBarTextStyle": "white"
+    },
+    "tabBar": {
+        "list": [
+            {
+                "pagePath": "pages/bleSearch/bleSearch",
+                "text": "text"
+            },
+            {
+                "pagePath": "pages/index/index",
+                "text": "text"
+            }
+        ]
+    }
 }
+

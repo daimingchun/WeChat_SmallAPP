@@ -68,6 +68,7 @@ function cm_ble_write_offset(str, offset) {
 
 // 发送蓝牙数据
 function cm_ble_write(str) {
+    console.log("cm_ble_write(" + str + ")");
     cm_ble_write_offset(str, 0);
 }
 

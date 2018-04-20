@@ -2,7 +2,7 @@
 
 .recView {
     width: 95%;
-    min-height: 600rpx;
+    min-height: 700rpx;
     background-color: white;
     margin-top: 20rpx;
 }

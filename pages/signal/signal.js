@@ -1,7 +1,5 @@
 //index.js
 //获取应用实例
-import chartWrap from '../canvas/chartWrap'
-import getConfig from './getConfig'
 var app = getApp()
 
 var util = require('../../utils/util.js');  // 引用公共接口
@@ -34,14 +32,16 @@ Page({
         });
     },
 
+    /**
+     * 生命周期函数--监听页面卸载
+     */
+    onUnload: function () {
+        console.log("signal page unloaded!");
+        clearInterval(this.data.timerId);
+    },
+
     // 返回主页
     backHomePage: function () {
-        // 停止搜索
-        wx.stopBluetoothDevicesDiscovery({
-            success: function (res) {
-                console.log(res);
-            },
-        })
         // 重定向到首页
         wx.redirectTo({
             url: '../index/index',
@@ -61,6 +61,9 @@ Page({
                     }
                 },5000
             );
+            wx.showLoading({
+                title: '正在获取',
+            })
         }
         else {
             // 显示提示框
@@ -72,9 +75,9 @@ Page({
                     if (res.confirm) {
                         console.log(res)
                         // 回到主页面
-                        // wx.redirectTo({
-                        //     url: '../index/index',
-                        // })
+                        wx.redirectTo({
+                            url: '../index/index',
+                        })
                     }
                 }
             })
@@ -128,9 +131,18 @@ Page({
             })
             // 已接收到完整的应答数据
             if ((that.data.bleRecvStr).indexOf("<Response>") != -1 && (that.data.bleRecvStr).indexOf("</Response>") != -1) {
+                
                 // CSQ
                 if ((that.data.bleRecvStr).indexOf("<csq>") != -1 && (that.data.bleRecvStr).indexOf("</csq>") != -1)
                 {
+                    // 隐藏加载动画
+                    wx.hideLoading();
+                    // 提示更新成功
+                    wx.showToast({
+                        title: '更新成功',
+                        icon: 'none'
+                    })
+
                     var head = (that.data.bleRecvStr).indexOf("<csq>") + 5;
                     var end = (that.data.bleRecvStr).indexOf("</csq>");
 
@@ -138,16 +150,21 @@ Page({
                         that.data.csqData.shift()
                     }
                     var csqValue = parseInt(that.data.bleRecvStr.slice(head, end), 10)
+                    if(csqValue == 99){
+                        csqValue = 0;
+                    }
+
+                    var rssiValue = csqValue * 2 + (-113)
                     // 更新csq值
                     that.setData({
-                        csq: csqValue,
+                        csq: rssiValue,
                     })
 
                     if (csqValue >= 0 && csqValue<= 31) {
-                        that.data.csqData.push(csqValue)
+                        that.data.csqData.push(rssiValue)
                     }
                     else {
-                        that.data.csqData.push(0)
+                        that.data.csqData.push(rssiValue)
                     }
                     console.log(that.data.csqData)
                 }
@@ -170,7 +187,7 @@ Page({
                     {
                         that.data.snrData.push(snrValue)
                     }else {
-                        that.data.snrData.push(null)
+                        that.data.snrData.push(0)
                     }
                     console.log(that.data.snrData)
                 }
@@ -193,7 +210,7 @@ Page({
                     if (rsrqValue != -32768) {
                         that.data.rsrqData.push(rsrqValue)
                     } else {
-                        that.data.rsrqData.push(null)
+                        that.data.rsrqData.push(0)
                     }
                     console.log(that.data.rsrqData)
                 }
@@ -205,7 +222,7 @@ Page({
                         type: 'line',
                         categories: that.data.canvasLabels,
                         series: [{
-                            name: 'CSQ' + "(" + that.data.csq + ")",
+                            name: 'RSSI' + "(" + that.data.csq + "dBm)",
                             format: function (val) {
                                 return val.toFixed(0);
                             },
@@ -213,7 +230,7 @@ Page({
                         }],
 
                         yAxis: {
-                            title: 'CSQ (信号强度)',
+                            title: 'RSSI (信号强度)',
                             format: function (val) {
                                 return val.toFixed(1);
                             },

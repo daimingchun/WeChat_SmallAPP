@@ -34,6 +34,12 @@
     font-size: 24rpx;
 }
 
+.bleState_test_warn {
+    padding: 10rpx;
+    font-size: 24rpx;
+    color: red;
+}
+
 .bleState_disconnect {
     color: red;
     text-decoration: underline;

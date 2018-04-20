@@ -9,9 +9,58 @@
     align-items: center;
 }
 
-/* 例如设计图尺寸为320 x 300 */
-.canvas {
-    width: 320px;
-    height: 300px;
-    /* transform: scale(0.5) */
+.mainPage {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    margin-bottom: 120rpx;
 }
+
+.canvas {
+    width: 95%;
+    height: 300px;
+    /* border: 1rpx inset gray; */
+    margin-top: 20rpx;
+}
+
+.label {
+    margin: 10rpx;
+    font-size: 24rpx;
+}
+
+.tableView {
+    width: 95%;
+    background-color: #1C86EE;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    padding: 10rpx;
+    margin-top: 10rpx;
+}
+
+.tableLabel {
+    width: 47.5%;
+    font-size: 24rpx;
+    background-color: #1C86EE;
+    /* padding: 10rpx; */
+    color: white;
+}
+
+
+.backView {
+    width: 100%;
+    height: 100rpx;
+    background-color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: fixed;
+    bottom: 0;
+}
+
+

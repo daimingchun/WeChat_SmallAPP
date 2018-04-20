@@ -1,0 +1,41 @@
+<!--pages/networkRegister/networkRegister.wxml-->
+<view class="MainContainer">
+<view class='mainPage'>
+
+    <canvas disable-scroll="true" class='canvas' canvas-id="pingCanvas"></canvas>
+    
+    <view class='tableView'>
+        <label class='tableLabel'>当前PING延时</label>
+        <label class='tableLabel'>{{currentpingTime}} ms</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>测试次数</label>
+        <label class='tableLabel'>{{pingCounts}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>失败次数</label>
+        <label class='tableLabel'>{{pingFailCounts}}</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>成功率</label>
+        <label class='tableLabel'>{{successRate}} %</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>平均延时</label>
+        <label class='tableLabel'>{{averagepingTime}} ms</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>最大延时</label>
+        <label class='tableLabel'>{{maxpingTime}} ms</label>
+    </view>
+    <view class='tableView'>
+        <label class='tableLabel'>最短延时</label>
+        <label class='tableLabel'>{{minpingTime}} ms</label>
+    </view>
+</view>
+
+    <view bindtap='backHomePage' class='backView'>返回首页</view>
+
+</view>
+
+
