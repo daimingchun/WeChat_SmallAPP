@@ -26,6 +26,7 @@
         </view>
     </view>
 
-    <view bindtap='backHomePage' class='backView'>返回首页</view>
+    <!-- <view bindtap='backHomePage' class='backView'>返回首页</view> -->
+    <button type='warn' bindtap='backHomePage' class='button'>返回首页</button>
 
 </view>

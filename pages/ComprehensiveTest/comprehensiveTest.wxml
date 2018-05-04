@@ -1,4 +1,4 @@
-<view class="MainContainer">
+<view class="MainContainer" >
     <view class='mainPage'>
         <text class='introductionText'>
         功能说明
@@ -27,7 +27,7 @@
             <label class='tableLabel'>成功率</label>
             <label class='tableLabel'>{{registerSuccessRate}} %</label>
         </view>
-        <canvas wx:if="{{pingDelay.length}}" disable-scroll="true" class='canvas' canvas-id="pingCanvas"></canvas>
+        <canvas wx:if="{{pingDelay.length && !showModal}}" disable-scroll="true" class='canvas' canvas-id="pingCanvas"></canvas>
         <view class='tableView' wx:if="{{pingDelay.length}}">
             <label class='tableLabel'>平均延时</label>
             <label class='tableLabel'>{{pingAvr}} ms</label>
@@ -44,7 +44,7 @@
             <label class='tableLabel'>成功率</label>
             <label class='tableLabel'>{{pingSuccessRate}} %</label>
         </view>
-        <canvas wx:if="{{rssi.length}}" disable-scroll="true" class='canvas' canvas-id="rssiCanvas"></canvas>
+        <canvas wx:if="{{rssi.length && !showModal}}" disable-scroll="true" class='canvas' canvas-id="rssiCanvas"></canvas>
         <view class='tableView' wx:if="{{rssi.length}}">
             <label class='tableLabel'>平均值</label>
             <label class='tableLabel'>{{rssiAvr}} dBm</label>
@@ -61,8 +61,7 @@
             <label class='tableLabel'>成功率</label>
             <label class='tableLabel'>{{rssiSuccessRate}} %</label>
         </view>
-        <canvas wx:if="{{snr.length}}" disable-scroll="true" class='canvas' canvas-id="snrCanvas">
-        <cover-view class='backView' bindtap='backHomePage'>返回首页</cover-view>
+        <canvas wx:if="{{snr.length && !showModal}}" disable-scroll="true" class='canvas' canvas-id="snrCanvas">
         </canvas>
         <view class='tableView' wx:if="{{snr.length}}">
             <label class='tableLabel'>平均值</label>
@@ -77,12 +76,25 @@
             <label class='tableLabel'>{{snrMin}}</label>
         </view>
 
-        <!-- <canvas class='backCanvas'>
-        <cover-view  bindtap='backHomePage'>返回首页</cover-view>
-        </canvas> -->
     </view>
     
-     <view wx:if="{{!snr.length}}" class='backView' bindtap='backHomePage'>返回首页</view>  
+    <button type='primary' bindtap='onSaveButtonClicked' class='button_save'>保存测试数据</button>
+    <button type='warn' bindtap='backHomePage' class='button_back'>返回首页</button>
+
+    <!--弹窗-->
+    <view class="modal-mask" bindtap="hideModal" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
+    <view class="modal-dialog" wx:if="{{showModal}}">
+        <view class="modal-title">添加备注信息</view>
+        <view class="modal-content">
+            <view class="modal-input">
+                <input placeholder-class="input-holder" type="text" maxlength="20" bindinput="inputChange" class="input" adjust-position='true' bindinput="onInputChange" value='{{remarkStr}}' placeholder='(默认为空)'></input>
+            </view>
+        </view>
+        <view class="modal-footer">
+            <view class="btn-cancel" bindtap="onCancel" data-status="cancel">取消</view>
+            <view class="btn-confirm" bindtap="onConfirm" data-status="confirm">确定</view>
+        </view>
+    </view>
 </view>
 
 

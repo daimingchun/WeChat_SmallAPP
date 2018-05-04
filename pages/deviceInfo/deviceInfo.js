@@ -50,7 +50,7 @@ Page({
 
                         util.cm_ble_write("<Request>deviceInfo</Request>")
                     }
-                }, 10000
+                }, 60000
             );
             wx.showLoading({
                 title: '正在获取',
@@ -110,7 +110,7 @@ Page({
 
                             util.cm_ble_write("<Request>deviceInfo</Request>")
                         }
-                    }, 5000
+                    }, 60000
                 );
             }
         })

@@ -8,21 +8,23 @@ var wxCharts = require('../../utils/wxcharts.js');
 Page({
     data: {
         bleRecvStr: "",
-        canvasLabels: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-        csqData: [],
-        snrData:[],
-        rsrqData:[],
-        csq:0,
-        snr:0,
-        rsrq:0,
-        earfcn:"NULL",
-        ecl:"NULL",
+        canvasLabels: [],
+        rssiData: [],
+        snrData: [],
+        rsrqData: [],
+        rssi: 0,
+        snr: 0,
+        rsrq: 0,
+        earfcn: "NULL",
+        ecl: "NULL",
         plmn: "NULL",
         band: "NULL",
         t3324: "NULL",
         t3412: "NULL",
         cellid: "NULL",
         timerId: 0,
+        showModal: false,
+        remarkStr: "",
     },
 
     onLoad: function () {
@@ -36,7 +38,7 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload: function () {
-        console.log("signal page unloaded!");
+        console.log("signal.wxml unloaded!");
         clearInterval(this.data.timerId);
     },
 
@@ -47,29 +49,37 @@ Page({
             url: '../index/index',
         })
     },
-
+    /** */
     onShow: function () {
         var that = this;
 
-        if (app.globalData.bleDeviceConnectState){
-            util.cm_ble_write("<Request>radioInfo</Request>")
-            that.data.timerId = setInterval(
+        if (app.globalData.bleDeviceConnectState) {
+            
+            setTimeout(
                 function(){
-                    if (app.globalData.bleDeviceConnectState){
+                    wx.showLoading({
+                        title: '正在测试',
+                    })
+                    util.cm_ble_write("<Request>radioInfo</Request>")
+                },1500
+            );
+            /**定时发送请求 */
+            clearInterval(that.data.timerId);
+            that.data.timerId = setInterval(
+                function () {
+                    if (app.globalData.bleDeviceConnectState) {
 
                         util.cm_ble_write("<Request>radioInfo</Request>")
                     }
-                },5000
+                }, 10000
             );
-            wx.showLoading({
-                title: '正在获取',
-            })
         }
         else {
+            clearInterval(that.data.timerId);
             // 显示提示框
             wx.showModal({
                 title: '提示',
-                content: '请连接蓝牙后尝试！',
+                content: '请蓝牙连接测试仪后尝试！',
                 showCancel: false,
                 success: function (res) {
                     if (res.confirm) {
@@ -108,16 +118,18 @@ Page({
                     }
                 })
                 clearInterval(that.data.timerId);
+                wx.hideLoading();
             }
-            else{
-                util.cm_ble_write("<Request>radioInfo</Request>"); // 请求射频参数\
+            else {
+                util.cm_ble_write("<Request>radioInfo</Request>"); // 请求射频参数
+                clearInterval(that.data.timerId);
                 that.data.timerId = setInterval(
                     function () {
                         if (app.globalData.bleDeviceConnectState) {
 
                             util.cm_ble_write("<Request>radioInfo</Request>")
                         }
-                    }, 5000
+                    }, 10000
                 );
             }
         })
@@ -131,50 +143,47 @@ Page({
             })
             // 已接收到完整的应答数据
             if ((that.data.bleRecvStr).indexOf("<Response>") != -1 && (that.data.bleRecvStr).indexOf("</Response>") != -1) {
-                
-                // CSQ
-                if ((that.data.bleRecvStr).indexOf("<csq>") != -1 && (that.data.bleRecvStr).indexOf("</csq>") != -1)
-                {
-                    // 隐藏加载动画
-                    wx.hideLoading();
-                    // 提示更新成功
-                    wx.showToast({
-                        title: '更新成功',
-                        icon: 'none'
-                    })
 
-                    var head = (that.data.bleRecvStr).indexOf("<csq>") + 5;
-                    var end = (that.data.bleRecvStr).indexOf("</csq>");
+                if ((that.data.bleRecvStr).indexOf("<radioInfo>") == -1 || (that.data.bleRecvStr).indexOf("</radioInfo>") == -1) {
+                    that.data.bleRecvStr = "";
+                    return;
+                }
 
-                    if (that.data.csqData.length >= 20) {
-                        that.data.csqData.shift()
-                    }
-                    var csqValue = parseInt(that.data.bleRecvStr.slice(head, end), 10)
-                    if(csqValue == 99){
-                        csqValue = 0;
+                // 隐藏加载动画
+                wx.hideLoading();
+
+                // rssi
+                if ((that.data.bleRecvStr).indexOf("<rssi>") != -1 && (that.data.bleRecvStr).indexOf("</rssi>") != -1) {
+                    
+                    var head = (that.data.bleRecvStr).indexOf("<rssi>") + 6;
+                    var end = (that.data.bleRecvStr).indexOf("</rssi>");
+
+                    if (that.data.rssiData.length >= 100) {
+                        that.data.rssiData.shift()
                     }
 
-                    var rssiValue = csqValue * 2 + (-113)
-                    // 更新csq值
+                    var rssiValue = parseInt(that.data.bleRecvStr.slice(head, end), 10)
+
+                    // if (rssiValue == 99) {
+                    //     rssiValue = 0;
+                    // }
+
+                    // var rssiValue = rssiValue * 2 + (-113)
+
+                    // 更新rssi值
                     that.setData({
-                        csq: rssiValue,
+                        rssi: rssiValue,
                     })
 
-                    if (csqValue >= 0 && csqValue<= 31) {
-                        that.data.csqData.push(rssiValue)
-                    }
-                    else {
-                        that.data.csqData.push(rssiValue)
-                    }
-                    console.log(that.data.csqData)
+                    that.data.rssiData.push(rssiValue)
+                    console.log(that.data.rssiData)
                 }
                 // SNR
-                if ((that.data.bleRecvStr).indexOf("<snr>") != -1 && (that.data.bleRecvStr).indexOf("</snr>") != -1)
-                {
+                if ((that.data.bleRecvStr).indexOf("<snr>") != -1 && (that.data.bleRecvStr).indexOf("</snr>") != -1) {
                     var head = (that.data.bleRecvStr).indexOf("<snr>") + 5;
                     var end = (that.data.bleRecvStr).indexOf("</snr>");
 
-                    if (that.data.snrData.length >= 20) {
+                    if (that.data.snrData.length >= 100) {
                         that.data.snrData.shift()
                     }
                     var snrValue = parseInt(that.data.bleRecvStr.slice(head, end), 10)
@@ -183,10 +192,9 @@ Page({
                         snr: snrValue,
                     })
 
-                    if (snrValue != -32768)
-                    {
+                    if (snrValue != -32768) {
                         that.data.snrData.push(snrValue)
-                    }else {
+                    } else {
                         that.data.snrData.push(0)
                     }
                     console.log(that.data.snrData)
@@ -196,7 +204,7 @@ Page({
                     var head = (that.data.bleRecvStr).indexOf("<rsrq>") + 6;
                     var end = (that.data.bleRecvStr).indexOf("</rsrq>");
 
-                    if (that.data.rsrqData.length >= 20) {
+                    if (that.data.rsrqData.length >= 100) {
                         that.data.rsrqData.shift()
                     }
 
@@ -214,23 +222,34 @@ Page({
                     }
                     console.log(that.data.rsrqData)
                 }
-                // 绘制CSQ走势图
+                /**增加绘图项 */
+                if (that.data.canvasLabels.length < 100) {
+                    that.data.canvasLabels.push("");
+                }
+                // 绘制rssi、RSRQ走势图
                 app.deviceInfo.then(function (deviceInfo) {
                     console.log('设备信息', deviceInfo)
                     new wxCharts({
-                        canvasId: 'csqCanvas',
+                        canvasId: 'rssiCanvas',
                         type: 'line',
                         categories: that.data.canvasLabels,
                         series: [{
-                            name: 'RSSI' + "(" + that.data.csq + "dBm)",
+                            name: 'RSSI' + "(" + that.data.rssi + "dBm)",
                             format: function (val) {
                                 return val.toFixed(0);
                             },
-                            data: that.data.csqData,
+                            data: that.data.rssiData,
+                        },
+                        {
+                            name: 'RSRQ' + "(" + that.data.rsrq + "dBm)",
+                            format: function (val) {
+                                return val.toFixed(0);
+                            },
+                            data: that.data.rsrqData,
                         }],
 
                         yAxis: {
-                            title: 'RSSI (信号强度)',
+                            title: '信号强度',
                             format: function (val) {
                                 return val.toFixed(1);
                             },
@@ -239,7 +258,8 @@ Page({
                         dataLabel: false,
                         width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
                         height: 180,
-                        animation: false
+                        animation: false,
+                        dataPointShape: false,
                     });
                 })
                 // 绘制SNR走势图
@@ -267,39 +287,40 @@ Page({
                         dataLabel: false,
                         width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
                         height: 180,
-                        animation: false
+                        animation: false,
+                        dataPointShape: false,
                     });
                 })
                 // 绘制RSRQ走势图
-                app.deviceInfo.then(function (deviceInfo) {
-                    console.log('设备信息', deviceInfo)
-                    new wxCharts({
-                        canvasId: 'rsrqCanvas',
-                        type: 'line',
-                        categories: that.data.canvasLabels,
-                        series: [{
-                            name: 'RSRQ' + "(" + that.data.rsrq + ")",
-                            format: function (val) {
-                                return val.toFixed(0);
-                            },
-                            data: that.data.rsrqData,
-                        }],
+                // app.deviceInfo.then(function (deviceInfo) {
+                //     console.log('设备信息', deviceInfo)
+                //     new wxCharts({
+                //         canvasId: 'rsrqCanvas',
+                //         type: 'line',
+                //         categories: that.data.canvasLabels,
+                //         series: [{
+                //             name: 'RSRQ' + "(" + that.data.rsrq + ")",
+                //             format: function (val) {
+                //                 return val.toFixed(0);
+                //             },
+                //             data: that.data.rsrqData,
+                //         }],
 
-                        yAxis: {
-                            title: 'RSRQ (参考信号接收质量)',
-                            format: function (val) {
-                                return val.toFixed(1);
-                            },
-                            min: 0
-                        },
-                        dataLabel: false,
-                        width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
-                        height: 180,
-                        animation: false
-                    });
-                })
+                //         yAxis: {
+                //             title: 'RSRQ (参考信号接收质量)',
+                //             format: function (val) {
+                //                 return val.toFixed(1);
+                //             },
+                //             min: 0
+                //         },
+                //         dataLabel: false,
+                //         width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                //         height: 180,
+                //         animation: false
+                //     });
+                // })
                 // earfcn
-                if ((that.data.bleRecvStr).indexOf("<earfcn>") != -1 && (that.data.bleRecvStr).indexOf("</earfcn>") != -1){
+                if ((that.data.bleRecvStr).indexOf("<earfcn>") != -1 && (that.data.bleRecvStr).indexOf("</earfcn>") != -1) {
                     var head = (that.data.bleRecvStr).indexOf("<earfcn>") + 8;
                     var end = (that.data.bleRecvStr).indexOf("</earfcn>");
 
@@ -364,10 +385,173 @@ Page({
                 }
 
                 // 清空蓝牙接收buffer
-                that.setData({
-                    bleRecvStr: ""
+                that.data.bleRecvStr = "";
+            }
+        })
+    },
+
+    /**
+     * 保存信号测试数据
+     */
+    onSaveButtonClicked: function () {
+        this.setData({
+            showModal: true,
+        })
+    },
+
+    /**
+     * 弹出框蒙层截断touchmove事件
+     */
+    preventTouchMove: function () {
+
+    },
+    /**
+     * 隐藏模态对话框
+     */
+    hideModal: function () {
+        this.setData({
+            showModal: false
+        });
+    },
+    /**
+     * 对话框取消按钮点击事件
+     */
+    onCancel: function () {
+        this.hideModal();
+        // this.setData({
+        //     remarkStr: "",
+        // })
+    },
+    /**
+     * 对话框确认按钮点击事件
+     */
+    onConfirm: function () {
+        var that = this;
+        this.hideModal();
+        wx.chooseLocation({
+            /*成功回调 */
+            success: function (res) {
+                console.log(res.name);
+                console.log(res.address);
+                console.log(res.latitude);
+                console.log(res.longitude);
+                var date = new Date();
+                //年  
+                var Y = date.getFullYear();
+                //月  
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+                //日  
+                var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+                //时  
+                var h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+                //分  
+                var m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+                //秒  
+                var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();  
+
+                var timestamp = Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s;
+                console.log("保存的索引时间戳为：" + timestamp);
+                /**准备缓存的数据 */
+                var testData =
+                {
+                    timeStamp_t: timestamp,
+                    testType: "信号测试",
+                    rssiData_t: that.data.rssiData,
+                    snrData_t: that.data.snrData,
+                    rsrqData_t: that.data.rsrqData,
+                    earfcn_t: that.data.earfcn,
+                    ecl_t: that.data.ecl,
+                    plmn_t: that.data.plmn,
+                    band_t: that.data.band,
+                    t3324_t: that.data.t3324,
+                    t3412_t: that.data.t3412,
+                    cellid_t: that.data.cellid,
+                    address_name: res.name,
+                    address_addr: res.address,
+                    address_lat: res.latitude,
+                    address_lon: res.longitude,
+                    comment: that.data.remarkStr,
+                    canvasLabels_t: that.data.canvasLabels,
+                };
+
+                /* 获取当前存储的索引缓存 */
+                wx.getStorage({
+                    key: 'CMIOT_D5310A_HistoryData',
+                    success: function(res) {
+                        var oldData = res.data;
+                        oldData.unshift(testData);
+                        wx.setStorage({
+                            key: 'CMIOT_D5310A_HistoryData',
+                            data: oldData,
+                            success: function(res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存成功',
+                                    icon: "success",
+                                    duration: 2000,
+                                })
+                            },
+                            fail: function(res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存失败',
+                                    icon: "none",
+                                    duration: 2000,
+                                })
+                            }
+                        })
+                    },
+                    fail: function(res) {
+                        console.log(res);
+                        var oldData = [];
+                        oldData.unshift(testData);
+                        wx.setStorage({
+                            key: 'CMIOT_D5310A_HistoryData',
+                            data: oldData,
+                            success: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存成功',
+                                    icon: "success",
+                                    duration: 2000,
+                                })
+                            },
+                            fail: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存失败',
+                                    icon: "none",
+                                    duration: 2000,
+                                })
+                            }
+                        })
+                    }
+                })
+
+                // wx.getStorage({
+                //     key: 'CMIOT_D5310A_HistoryData',
+                //     success: function (res) {
+                //         console.log(res);
+                //     },
+                // })
+            },
+
+            /* 失败回调 */
+            fail: function (res) {
+                wx.showToast({
+                    title: '位置选择失败',
+                    icon: 'none'
                 })
             }
+        })
+    },
+    /**
+     * 备注输入回调
+     */
+    onInputChange: function (e) {
+        console.log(e.detail.value);
+        this.setData({
+            remarkStr: e.detail.value,
         })
     },
 })

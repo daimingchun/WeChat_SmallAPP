@@ -1,0 +1,31 @@
+<!-- history.wxml -->
+<view class="container">
+    <view class='history_title'>
+        <icon type='waiting' size='13'></icon>
+        <label class='history_label'>测试记录</label>
+        <label class='history_label_del' bindtap='onClearButtonClicked'>清除所有测试记录</label>
+    </view>
+
+    <!-- <view class="section">
+        <view class="section__title">日期选择器</view>
+        <picker mode="date" value="{{date}}"  bindchange="bindDateChange">
+            <view class="picker">
+                当前选择: {{date}}
+            </view>
+        </picker>
+    </view> -->
+
+    <view class='history_view' wx:if="{{!historyData.length}}">
+        <label class='history_tip_text'>暂无测试记录</label>
+    </view>
+    <view wx:else class='history_view'>
+        <view wx:for="{{historyData}}" class='history_list_view'>
+            <label class='history_list_label' id='{{item.timeStamp_t}}' bindtap='onHistoryListViewClicked'>测试地点：{{item.address_name}}</label>
+            <label class='history_list_label' id='{{item.timeStamp_t}}' bindtap='onHistoryListViewClicked'>测试时间：{{item.timeStamp_t}}</label>
+            <label class='history_list_label' id='{{item.timeStamp_t}}' bindtap='onHistoryListViewClicked'>测试类型：{{item.testType}}</label>
+            <label class='history_list_label' id='{{item.timeStamp_t}}' bindtap='onHistoryListViewClicked'>备注信息：{{item.comment}}</label>
+            <label class='history_list_label_del' id='{{item.timeStamp_t}}' bindtap='onHistoryListDelClicked'>删除记录</label>
+        </view>
+    </view>
+    <!-- <view bindtap='backHomePage' class='backView'>返回首页</view> -->
+</view>

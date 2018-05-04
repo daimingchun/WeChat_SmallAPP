@@ -39,6 +39,8 @@ Page({
         pingMin:0,
         pingMax:0,
         pingSuccessRate:0,
+        showModal: false,
+        remarkStr: "",
     },
 
     /**
@@ -50,8 +52,6 @@ Page({
             url: '../index/index',
         })
     },
-
-    
 
     /**
      * 测试按钮回调
@@ -71,6 +71,7 @@ Page({
                 canvasLabels:[],
                 progressValue:0,
             })
+            clearInterval(that.data.timerId);
             /** 发送综合测试指令 */
             util.cm_ble_write("<Request>comprehensiveTest</Request>");
             that.data.timerId = setInterval(
@@ -124,6 +125,7 @@ Page({
 
         var that = this;
         if (!app.globalData.bleDeviceConnectState) {
+
             // 显示提示框
             wx.showModal({
                 title: '提示',
@@ -147,6 +149,7 @@ Page({
             console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`)
             // 设备连接异常断开
             if (!res.connected) {
+                clearInterval(that.data.timerId);
                 // 更新连接设备状态信息
                 app.globalData.bleConnectedDeviceId = null;
                 app.globalData.bleConnectDeviceName = null;
@@ -189,19 +192,17 @@ Page({
             if ((that.data.bleRecvStr).indexOf("<Response>") != -1 && (that.data.bleRecvStr).indexOf("</Response>") != -1) {
 
                 if (!that.data.onTesting) {
-                    that.setData({
-                        bleRecvStr: '',
-                    })
+                    that.data.bleRecvStr = "";
+                    return;
+                }
+
+                if ((that.data.bleRecvStr).indexOf("<comprehensive>") == -1 || (that.data.bleRecvStr).indexOf("</comprehensive>") == -1) {
+                    that.data.bleRecvStr = "";
                     return;
                 }
 
                 // 驻网时间
                 if ((that.data.bleRecvStr).indexOf("<attachTime>") != -1 && (that.data.bleRecvStr).indexOf("</attachTime>") != -1) {
-                    // 提示更新成功
-                    wx.showToast({
-                        title: '更新成功',
-                        icon: 'none'
-                    })
 
                     var head = (that.data.bleRecvStr).indexOf("<attachTime>") + 12;
                     var end = (that.data.bleRecvStr).indexOf("</attachTime>");
@@ -402,9 +403,8 @@ Page({
                 console.log("rssi: " + that.data.rssi);
                 console.log("pingDelay: " + that.data.pingDelay);
 
-                that.setData({
-                    bleRecvStr: "",
-                })
+                /**清除蓝牙缓存数据 */
+                that.data.bleRecvStr = "";
 
                 /** 绘制驻网时间走势图 */
                 if(that.data.attachTime.length > 0) {
@@ -438,7 +438,7 @@ Page({
                 }
 
                 /** 绘制网络延时走势图 */
-                if (that.data.attachTime.length > 0) {
+                if (that.data.pingDelay.length > 0) {
                     app.deviceInfo.then(function (deviceInfo) {
                         console.log('设备信息', deviceInfo)
                         new wxCharts({
@@ -469,7 +469,7 @@ Page({
                 }
 
                 /** 绘制RSSI走势图 */
-                if (that.data.attachTime.length > 0) {
+                if (that.data.rssi.length > 0) {
                     app.deviceInfo.then(function (deviceInfo) {
                         console.log('设备信息', deviceInfo)
                         new wxCharts({
@@ -500,7 +500,7 @@ Page({
                 }
 
                 /** 绘制SNR走势图 */
-                if (that.data.attachTime.length > 0) {
+                if (that.data.snr.length > 0) {
                     app.deviceInfo.then(function (deviceInfo) {
                         console.log('设备信息', deviceInfo)
                         new wxCharts({
@@ -537,14 +537,15 @@ Page({
      * 生命周期函数--监听页面隐藏
      */
     onHide: function () {
-
+        console.log("comprehensive page hide!");
     },
 
     /**
      * 生命周期函数--监听页面卸载
      */
     onUnload: function () {
-
+        console.log("comprehensive page unload!");
+        clearInterval(this.data.timerId);
     },
 
     /**
@@ -566,6 +567,183 @@ Page({
      */
     onShareAppMessage: function () {
 
+    },
+
+
+    /**
+     * 保存信号测试数据
+     */
+    onSaveButtonClicked: function () {
+        this.setData({
+            showModal: true,
+        })
+    },
+
+    /**
+     * 弹出框蒙层截断touchmove事件
+     */
+    preventTouchMove: function () {
+
+    },
+    /**
+     * 隐藏模态对话框
+     */
+    hideModal: function () {
+        this.setData({
+            showModal: false
+        });
+    },
+    /**
+     * 对话框取消按钮点击事件
+     */
+    onCancel: function () {
+        this.hideModal();
+        // this.setData({
+        //     remarkStr: "",
+        // })
+    },
+    /**
+     * 对话框确认按钮点击事件
+     */
+    onConfirm: function () {
+        var that = this;
+        this.hideModal();
+        wx.chooseLocation({
+            /*成功回调 */
+            success: function (res) {
+                console.log(res.name);
+                console.log(res.address);
+                console.log(res.latitude);
+                console.log(res.longitude);
+                var date = new Date();
+                //年
+                var Y = date.getFullYear();
+                //月
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+                //日
+                var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+                //时
+                var h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+                //分
+                var m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+                //秒
+                var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+
+                var timestamp = Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s;
+                console.log("保存的索引时间戳为：" + timestamp);
+                /**准备缓存的数据 */
+                var testData =
+                    {
+                        timeStamp_t: timestamp,
+                        testType: "综合测试",
+                        attachTime_t: that.data.attachTime,
+                        rssi_t: that.data.rssi,
+                        snr_t: that.data.snr,
+                        pingDelay_t: that.data.pingDelay,
+                        canvasLabels_t: that.data.canvasLabels,
+                        registerAvrTimes_t: that.data.registerAvrTimes,
+                        registerMaxTimes_t: that.data.registerMaxTimes,
+                        registerMinTimes_t: that.data.registerMinTimes,
+                        registerSuccessRate_t: that.data.registerSuccessRate,
+                        rssiAvr_t: that.data.rssiAvr,
+                        rssiMin_t: that.data.rssiMin,
+                        rssiMax_t: that.data.rssiMax,
+                        rssiSuccessRate_t: that.data.rssiSuccessRate,
+                        snrAvr_t: that.data.snrAvr,
+                        snrMin_t: that.data.snrMin,
+                        snrMax_t: that.data.snrMax,
+                        pingAvr_t: that.data.pingAvr,
+                        pingMin_t: that.data.pingMin,
+                        pingMax_t: that.data.pingMax,
+                        pingSuccessRate_t: that.data.pingSuccessRate,
+                        address_name: res.name,
+                        address_addr: res.address,
+                        address_lat: res.latitude,
+                        address_lon: res.longitude,
+                        comment: that.data.remarkStr,
+                        canvasLabels_t: that.data.canvasLabels,
+                    };
+
+                /* 获取当前存储的索引缓存 */
+                wx.getStorage({
+                    key: 'CMIOT_D5310A_HistoryData',
+                    success: function (res) {
+                        var oldData = res.data;
+                        oldData.unshift(testData);
+                        wx.setStorage({
+                            key: 'CMIOT_D5310A_HistoryData',
+                            data: oldData,
+                            success: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存成功',
+                                    icon: "success",
+                                    duration: 2000,
+                                })
+                            },
+                            fail: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存失败',
+                                    icon: "none",
+                                    duration: 2000,
+                                })
+                            }
+                        })
+                    },
+                    fail: function (res) {
+                        console.log(res);
+                        var oldData = [];
+                        oldData.unshift(testData);
+                        wx.setStorage({
+                            key: 'CMIOT_D5310A_HistoryData',
+                            data: oldData,
+                            success: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存成功',
+                                    icon: "success",
+                                    duration: 2000,
+                                })
+                            },
+                            fail: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存失败',
+                                    icon: "none",
+                                    duration: 2000,
+                                })
+                            }
+                        })
+                    }
+                })
+
+                wx.getStorage({
+                    key: 'CMIOT_D5310A_HistoryData',
+                    success: function (res) {
+                        console.log(res);
+                    },
+                })
+            },
+
+            /* 失败回调 */
+            fail: function (res) {
+                wx.showToast({
+                    title: '位置选择失败',
+                    icon: 'none'
+                })
+            }
+        })
+    },
+
+    /**
+     * 备注输入回调
+     */
+    onInputChange: function (e) {
+        console.log(e.detail.value);
+        this.setData({
+            remarkStr: e.detail.value,
+        })
     },
 
 })

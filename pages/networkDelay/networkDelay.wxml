@@ -2,7 +2,7 @@
 <view class="MainContainer">
 <view class='mainPage'>
 
-    <canvas disable-scroll="true" class='canvas' canvas-id="pingCanvas"></canvas>
+    <canvas disable-scroll="true" class='canvas' canvas-id="pingCanvas" wx:if="{{!showModal}}"></canvas>
     
     <view class='tableView'>
         <label class='tableLabel'>当前PING延时</label>
@@ -34,7 +34,23 @@
     </view>
 </view>
 
-    <view bindtap='backHomePage' class='backView'>返回首页</view>
+    <button type='primary' bindtap='onSaveButtonClicked' class='button_save'>保存测试数据</button>
+    <button type='warn' bindtap='backHomePage' class='button_back'>返回首页</button>
+
+    <!--弹窗-->
+    <view class="modal-mask" bindtap="hideModal" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
+    <view class="modal-dialog" wx:if="{{showModal}}">
+        <view class="modal-title">添加备注信息</view>
+        <view class="modal-content">
+            <view class="modal-input">
+                <input placeholder-class="input-holder" type="text" maxlength="20" bindinput="inputChange" class="input" adjust-position='true' bindinput="onInputChange" value='{{remarkStr}}' placeholder='(默认为空)'></input>
+            </view>
+        </view>
+        <view class="modal-footer">
+            <view class="btn-cancel" bindtap="onCancel" data-status="cancel">取消</view>
+            <view class="btn-confirm" bindtap="onConfirm" data-status="confirm">确定</view>
+        </view>
+    </view>
 
 </view>
 

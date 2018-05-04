@@ -20,7 +20,9 @@ Page({
         successRate: 0,
         timerId: 0,
         bleRecvStr: "",
-        canvasLabels: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        canvasLabels: [],
+        showModal: false,
+        remarkStr: "",
     },
 
     /**
@@ -31,32 +33,24 @@ Page({
         wx.setNavigationBarTitle({
             title: 'PING测试'
         });
-    },
 
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function () {
+        console.log("networkDelay page onLoaded!");
 
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function () {
         var that = this;
         if (app.globalData.bleDeviceConnectState) {
-            util.cm_ble_write("<Request>pingDelay</Request>");
-            that.data.timerId = setInterval(
-                function () {
-                    util.cm_ble_write("<Request>pingDelay</Request>");
-                }, 12*1000
-            );
             wx.showLoading({
                 title: '正在测试',
             })
+            util.cm_ble_write("<Request>pingDelay</Request>");
+            clearInterval(that.data.timerId);
+            that.data.timerId = setInterval(
+                function () {
+                    util.cm_ble_write("<Request>pingDelay</Request>");
+                }, 12 * 1000
+            );
         }
         else {
+            clearInterval(that.data.timerId);
             // 显示提示框
             wx.showModal({
                 title: '提示',
@@ -80,6 +74,7 @@ Page({
             console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`)
             // 设备连接异常断开
             if (!res.connected) {
+                clearInterval(that.data.timerId);
                 // 更新连接设备状态信息
                 app.globalData.bleConnectedDeviceId = null;
                 app.globalData.bleConnectDeviceName = null;
@@ -99,7 +94,7 @@ Page({
                         }
                     }
                 })
-
+                // 隐藏加载框
                 wx.hideLoading();
             }
             else {
@@ -108,7 +103,7 @@ Page({
                 that.data.timerId = setInterval(
                     function () {
                         util.cm_ble_write("<Request>pingDelay</Request>");
-                    }, 12*1000
+                    }, 12 * 1000
                 );
             }
         })
@@ -133,18 +128,18 @@ Page({
                     var value = parseInt(that.data.bleRecvStr.slice(head, end), 10);
 
                     // 只保留最近20次测试数据
-                    if (that.data.pingTime.length >= 20) {
+                    if (that.data.pingTime.length >= 100) {
                         that.data.pingTime.shift()
                     }
 
                     // 驻网失败
                     if (value == 0) {
                         // 提示本次驻网失败
-                        wx.showToast({
-                            title: 'PING超时',
-                            icon: 'none',
-                            duration:1000
-                        })
+                        // wx.showToast({
+                        //     title: 'PING超时',
+                        //     icon: 'none',
+                        //     duration: 1000
+                        // })
 
                         console.log("Ping timeout!");
                         value = 0;
@@ -159,11 +154,11 @@ Page({
                     }
                     else {
                         // 提示本次驻网成功
-                        wx.showToast({
-                            title: 'PING成功',
-                            icon: 'none',
-                            duration:1000
-                        })
+                        // wx.showToast({
+                        //     title: 'PING成功',
+                        //     icon: 'none',
+                        //     duration: 1000
+                        // })
 
                         // 将驻网时间转换为秒单位
                         // value = Number((value).toFixed(2));
@@ -202,7 +197,11 @@ Page({
                         })
                     }
 
-                    // 绘制驻网时间走势图
+                    /**增加绘图项 */
+                    if (that.data.canvasLabels.length < 100) {
+                        that.data.canvasLabels.push("");
+                    }
+                    // 绘制网络延时时间走势图
                     app.deviceInfo.then(function (deviceInfo) {
                         console.log('设备信息', deviceInfo)
                         new wxCharts({
@@ -210,7 +209,7 @@ Page({
                             type: 'line',
                             categories: that.data.canvasLabels,
                             series: [{
-                                name: '网络延迟（ms）',
+                                name: 'PING延迟（' + value + 'ms）',
                                 format: function (val) {
                                     return val.toFixed(0);
                                 },
@@ -218,7 +217,7 @@ Page({
                             }],
 
                             yAxis: {
-                                title: '网络延迟（ms）',
+                                title: '网络延迟',
                                 format: function (val) {
                                     return val.toFixed(1);
                                 },
@@ -226,25 +225,39 @@ Page({
                             },
                             dataLabel: false,
                             width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
-                            height: 300,
-                            animation: false
+                            height: 200,
+                            animation: false,
+                            dataPointShape: false,
                         });
                     })
                 }
-
+                /**新建 */
                 clearInterval(that.data.timerId);
                 util.cm_ble_write("<Request>pingDelay</Request>");
                 that.data.timerId = setInterval(
                     function () {
                         util.cm_ble_write("<Request>pingDelay</Request>");
-                    }, 12*1000
+                    }, 12 * 1000
                 );
 
-                that.setData({
-                    bleRecvStr: '',
-                })
+                /**更新蓝牙数据 */
+                that.data.bleRecvStr = "";
             }
         })
+    },
+
+    /**
+     * 生命周期函数--监听页面初次渲染完成
+     */
+    onReady: function () {
+
+    },
+
+    /**
+     * 生命周期函数--监听页面显示
+     */
+    onShow: function () {
+        
     },
 
     /**
@@ -289,7 +302,172 @@ Page({
      */
     onShareAppMessage: function () {
 
-    }
+    },
+
+
+    /**
+     * 保存信号测试数据
+     */
+    onSaveButtonClicked: function () {
+        this.setData({
+            showModal: true,
+        })
+    },
+
+    /**
+     * 弹出框蒙层截断touchmove事件
+     */
+    preventTouchMove: function () {
+
+    },
+    /**
+     * 隐藏模态对话框
+     */
+    hideModal: function () {
+        this.setData({
+            showModal: false
+        });
+    },
+    /**
+     * 对话框取消按钮点击事件
+     */
+    onCancel: function () {
+        this.hideModal();
+        // this.setData({
+        //     remarkStr: "",
+        // })
+    },
+    /**
+     * 对话框确认按钮点击事件
+     */
+    onConfirm: function () {
+        var that = this;
+        this.hideModal();
+        wx.chooseLocation({
+            /*成功回调 */
+            success: function (res) {
+                console.log(res.name);
+                console.log(res.address);
+                console.log(res.latitude);
+                console.log(res.longitude);
+                var date = new Date();
+                //年
+                var Y = date.getFullYear();
+                //月
+                var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+                //日
+                var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+                //时
+                var h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+                //分
+                var m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+                //秒
+                var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+
+                var timestamp = Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s;
+                console.log("保存的索引时间戳为：" + timestamp);
+                /**准备缓存的数据 */
+                var testData =
+                    {
+                        timeStamp_t: timestamp,
+                        testType: "PING测试",
+                        pingTime_t: that.data.pingTime,
+                        averagepingTime_t: that.data.averagepingTime,
+                        maxpingTime_t: that.data.maxpingTime,
+                        minpingTime_t: that.data.minpingTime,
+                        pingCounts_t: that.data.pingCounts,
+                        pingFailCounts_t: that.data.pingFailCounts,
+                        successRate_t: that.data.successRate,
+                        address_name: res.name,
+                        address_addr: res.address,
+                        address_lat: res.latitude,
+                        address_lon: res.longitude,
+                        comment: that.data.remarkStr,
+                        canvasLabels_t: that.data.canvasLabels,
+                    };
+
+                /* 获取当前存储的索引缓存 */
+                wx.getStorage({
+                    key: 'CMIOT_D5310A_HistoryData',
+                    success: function (res) {
+                        var oldData = res.data;
+                        oldData.unshift(testData);
+                        wx.setStorage({
+                            key: 'CMIOT_D5310A_HistoryData',
+                            data: oldData,
+                            success: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存成功',
+                                    icon: "success",
+                                    duration: 2000,
+                                })
+                            },
+                            fail: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存失败',
+                                    icon: "none",
+                                    duration: 2000,
+                                })
+                            }
+                        })
+                    },
+                    fail: function (res) {
+                        console.log(res);
+                        var oldData = [];
+                        oldData.unshift(testData);
+                        wx.setStorage({
+                            key: 'CMIOT_D5310A_HistoryData',
+                            data: oldData,
+                            success: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存成功',
+                                    icon: "success",
+                                    duration: 2000,
+                                })
+                            },
+                            fail: function (res) {
+                                console.log(res);
+                                wx.showToast({
+                                    title: '保存失败',
+                                    icon: "none",
+                                    duration: 2000,
+                                })
+                            }
+                        })
+                    }
+                })
+
+                wx.getStorage({
+                    key: 'CMIOT_D5310A_HistoryData',
+                    success: function (res) {
+                        console.log(res);
+                    },
+                })
+            },
+
+            /* 失败回调 */
+            fail: function (res) {
+                wx.showToast({
+                    title: '位置选择失败',
+                    icon: 'none'
+                })
+            }
+        })
+    },
+
+    /**
+     * 备注输入回调
+     */
+    onInputChange: function (e) {
+        console.log(e.detail.value);
+        this.setData({
+            remarkStr: e.detail.value,
+        })
+    },
+
 })
 
 

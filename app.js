@@ -13,6 +13,7 @@ App({
         })
         console.log('App Launched!')
         this.deviceInfo = this.promise.getDeviceInfo();
+        // wx.clearStorage();
     },
     globalData: {
         bleConnectDeviceName        : null,

@@ -8,7 +8,9 @@
         "pages/deviceInfo/deviceInfo",
         "pages/signal/signal",
         "pages/networkRegister/networkRegister",
-        "pages/networkDelay/networkDelay"
+        "pages/networkDelay/networkDelay",
+        "pages/historyList/history",
+        "pages/history_view/history_view"
     ],
     "window": {
         "backgroundTextStyle": "light",
@@ -16,18 +18,6 @@
         "navigationBarBackgroundColor": "#1C86EE",
         "navigationBarTitleText": "NB-IoT网络测试",
         "navigationBarTextStyle": "white"
-    },
-    "tabBar": {
-        "list": [
-            {
-                "pagePath": "pages/bleSearch/bleSearch",
-                "text": "text"
-            },
-            {
-                "pagePath": "pages/index/index",
-                "text": "text"
-            }
-        ]
     }
 }
 

@@ -1,14 +1,15 @@
 <!--index.wxml-->
-<view class="container">
+<view class="MainContainer">
     <view class='bleSearch'>
-        <button bindtap='searchBleDevice'  size='mini' class='bleSearch_button'><icon type='search' size='10'/> 搜索测试仪设备</button>
+        <button bindtap='searchBleDevice' size='mini' class='bleSearch_button'>
+            <icon type='search' size='10' /> 搜索测试仪设备</button>
     </view>
     <view class='bleState'>
         <image src='../image/bluetooth.jpg' mode='aspectFit' class='bleIconImage'></image>
         <label class='bleState_text'>蓝牙状态：</label>
         <label wx:if="{{BleConnectState}}" class='bleState_text'>{{BleConnectName}}(已连接)</label>
         <label wx:else class='bleState_test_warn'>未连接到测试仪</label>
-        <label wx:if ='{{BleConnectState}}' class='bleState_disconnect' bindtap='disconnectBleDevice'>断开连接</label>
+        <label wx:if='{{BleConnectState}}' class='bleState_disconnect' bindtap='disconnectBleDevice'>断开连接</label>
     </view>
     <view class='iconView'>
         <view class='icon' bindtap='cm_enter_deviceInfoPage'>
@@ -17,7 +18,7 @@
         </view>
         <view class='icon' bindtap='cm_enter_signalPage'>
             <image src='../image/signal.jpg' mode='aspectFit' class='iconImage'></image>
-            <label class='iconText'>信号参数</label>
+            <label class='iconText'>信号测试</label>
         </view>
         <view class='icon' bindtap='cm_enter_registerPage'>
             <image src='../image/radio.jpg' mode='aspectFit' class='iconImage'></image>
@@ -27,7 +28,7 @@
     <view class='iconView'>
         <view class='icon' bindtap='cm_enter_networkDelayPage'>
             <image src='../image/pingIcon.jpg' mode='aspectFit' class='iconImage'></image>
-            <label class='iconText'>网络延时</label>
+            <label class='iconText'>PING测试</label>
         </view>
         <view class='icon' bindtap='cm_enter_comprehensiveTestPage'>
             <image src='../image/testIcon.jpg' mode='aspectFit' class='iconImage'></image>
@@ -35,14 +36,25 @@
         </view>
         <view class='icon' bindtap='cm_enter_atMode'>
             <image src='../image/terminal.jpg' mode='aspectFit' class='iconImage'></image>
-            <label class='iconText'>AT模式</label>
+            <label class='iconText'>开发者模式</label>
         </view>
     </view>
+
     <view class='history_title'>
         <icon type='waiting' size='13'></icon>
         <label class='history_label'>测试记录</label>
     </view>
-    <view class='history_view'>
+
+    <view class='history_view' wx:if="{{!historyData.length}}">
         <label class='history_tip_text'>暂无测试记录</label>
+    </view>
+    <view wx:else class='history_view'>
+        <view wx:for="{{historyData}}" class='history_list_view'>
+            <label class='history_list_label' id='{{item.timeStamp_t}}' bindtap='onHistoryListViewClicked'>测试地点：{{item.address_name}}</label>
+            <label class='history_list_label' id='{{item.timeStamp_t}}' bindtap='onHistoryListViewClicked'>测试时间：{{item.timeStamp_t}}</label>
+            <label class='history_list_label' id='{{item.timeStamp_t}}' bindtap='onHistoryListViewClicked'>测试类型：{{item.testType}}</label>
+            <label class='history_list_label' id='{{item.timeStamp_t}}' bindtap='onHistoryListViewClicked'>备注信息：{{item.comment}}</label>
+        </view>
+        <label class='history_more_label' bindtap='cm_enter_historyPage'>查看详细历史记录</label>
     </view>
 </view>

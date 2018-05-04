@@ -1,56 +1,68 @@
 <view class="MainContainer">
-<view class='mainPage'>
+    <view class='mainPage'>
 
-    <canvas disable-scroll="true" class='canvas' canvas-id="csqCanvas"></canvas>
-    <!-- <label class='label'>CSQ信号强度</label> -->
-    <canvas disable-scroll="true" class='canvas' canvas-id="snrCanvas"></canvas>
-    <!-- <label class='label'>SNR信噪比</label> -->
-    <canvas disable-scroll="true" class='canvas' canvas-id="rsrqCanvas"></canvas>
-    <!-- <label class='label'>RSRQ参考信号接收质量</label> -->
-    
-    <view class='tableView'>
-        <label class='tableLabel'>RSSI</label>
-        <label class='tableLabel'>{{csq}}dbm</label>
+        <canvas disable-scroll="true" class='canvas' canvas-id="rssiCanvas" wx:if="{{!showModal}}"></canvas>
+        <canvas disable-scroll="true" class='canvas' canvas-id="snrCanvas" wx:if="{{!showModal}}"></canvas>
+        <!-- <canvas disable-scroll="true" class='canvas' canvas-id="rsrqCanvas" wx:if="{{!showModal}}"></canvas> -->
+
+        <view class='tableView'>
+            <label class='tableLabel'>RSSI</label>
+            <label class='tableLabel'>{{rssi}}dbm</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>SNR</label>
+            <label class='tableLabel'>{{snr}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>RSRQ</label>
+            <label class='tableLabel'>{{rsrq}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>EARFCN</label>
+            <label class='tableLabel'>{{earfcn}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>ECL</label>
+            <label class='tableLabel'>{{ecl}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>PLMN</label>
+            <label class='tableLabel'>{{plmn}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>BAND</label>
+            <label class='tableLabel'>{{band}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>T3324</label>
+            <label class='tableLabel'>{{t3324}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>T3412</label>
+            <label class='tableLabel'>{{t3412}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>CELL ID</label>
+            <label class='tableLabel'>{{cellid}}</label>
+        </view>
     </view>
-    <view class='tableView'>
-        <label class='tableLabel'>SNR</label>
-        <label class='tableLabel'>{{snr}}</label>
+
+    <button type='primary' bindtap='onSaveButtonClicked' class='button_save'>保存测试数据</button>
+    <button type='warn' bindtap='backHomePage' class='button_back'>返回首页</button>
+
+    <!--保存测试记录备注信息弹窗-->
+    <view class="modal-mask" bindtap="hideModal" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
+    <view class="modal-dialog" wx:if="{{showModal}}">
+        <view class="modal-title">添加备注信息</view>
+        <view class="modal-content">
+            <view class="modal-input">
+                <input placeholder-class="input-holder" type="text" maxlength="20" bindinput="inputChange" class="input" adjust-position='true' bindinput="onInputChange" value='{{remarkStr}}' placeholder='(默认为空)'></input>
+            </view>
+        </view>
+        <view class="modal-footer">
+            <view class="btn-cancel" bindtap="onCancel" data-status="cancel">取消</view>
+            <view class="btn-confirm" bindtap="onConfirm" data-status="confirm">确定</view>
+        </view>
     </view>
-    <view class='tableView'>
-        <label class='tableLabel'>RSRQ</label>
-        <label class='tableLabel'>{{rsrq}}</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>EARFCN</label>
-        <label class='tableLabel'>{{earfcn}}</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>ECL</label>
-        <label class='tableLabel'>{{ecl}}</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>PLMN</label>
-        <label class='tableLabel'>{{plmn}}</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>BAND</label>
-        <label class='tableLabel'>{{band}}</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>T3324</label>
-        <label class='tableLabel'>{{t3324}}</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>T3412</label>
-        <label class='tableLabel'>{{t3412}}</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>CELL ID</label>
-        <label class='tableLabel'>{{cellid}}</label>
-    </view>
+
 </view>
-<!-- <cover-view bindtap='backHomePage' class='backView'>返回首页</cover-view> -->
- <view bindtap='backHomePage' class='backView'>返回首页</view> 
-</view>
-
-

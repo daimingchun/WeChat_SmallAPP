@@ -54,5 +54,11 @@
     /* border-top: 1rpx groove gray; */
 }
 
-
+.button {
+    /* margin-top: 40rpx;
+    margin-bottom: 40rpx; */
+    width: 95%;
+    position: fixed;
+    bottom: 20rpx;
+}
 

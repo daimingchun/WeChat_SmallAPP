@@ -1,41 +1,55 @@
 <!--pages/networkRegister/networkRegister.wxml-->
 <view class="MainContainer">
-<view class='mainPage'>
+    <view class='mainPage'>
 
-    <canvas disable-scroll="true" class='canvas' canvas-id="registerCanvas"></canvas>
-    
-    <view class='tableView'>
-        <label class='tableLabel'>当前驻网时间</label>
-        <label class='tableLabel'>{{currentRegisterTime}} s</label>
+        <canvas disable-scroll="true" class='canvas' canvas-id="registerCanvas" wx:if="{{!showModal}}"></canvas>
+
+        <view class='tableView'>
+            <label class='tableLabel'>当前驻网时间</label>
+            <label class='tableLabel'>{{currentRegisterTime}} s</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>测试次数</label>
+            <label class='tableLabel'>{{registerCounts}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>失败次数</label>
+            <label class='tableLabel'>{{registerFailCounts}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>成功率</label>
+            <label class='tableLabel'>{{successRate}} %</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>平均时长</label>
+            <label class='tableLabel'>{{averageRegisterTime}} s</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最大时长</label>
+            <label class='tableLabel'>{{maxRegisterTime}} s</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最短时长</label>
+            <label class='tableLabel'>{{minRegisterTime}} s</label>
+        </view>
     </view>
-    <view class='tableView'>
-        <label class='tableLabel'>测试次数</label>
-        <label class='tableLabel'>{{registerCounts}}</label>
+
+    <button type='primary' bindtap='onSaveButtonClicked' class='button_save'>保存测试数据</button>
+    <button type='warn' bindtap='backHomePage' class='button_back'>返回首页</button>
+
+    <!--弹窗-->
+    <view class="modal-mask" bindtap="hideModal" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
+    <view class="modal-dialog" wx:if="{{showModal}}">
+        <view class="modal-title">添加备注信息</view>
+        <view class="modal-content">
+            <view class="modal-input">
+                <input placeholder-class="input-holder" type="text" maxlength="20" bindinput="inputChange" class="input" adjust-position='true' bindinput="onInputChange" value='{{remarkStr}}' placeholder='(默认为空)'></input>
+            </view>
+        </view>
+        <view class="modal-footer">
+            <view class="btn-cancel" bindtap="onCancel" data-status="cancel">取消</view>
+            <view class="btn-confirm" bindtap="onConfirm" data-status="confirm">确定</view>
+        </view>
     </view>
-    <view class='tableView'>
-        <label class='tableLabel'>失败次数</label>
-        <label class='tableLabel'>{{registerFailCounts}}</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>成功率</label>
-        <label class='tableLabel'>{{successRate}} %</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>平均时长</label>
-        <label class='tableLabel'>{{averageRegisterTime}} s</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>最大时长</label>
-        <label class='tableLabel'>{{maxRegisterTime}} s</label>
-    </view>
-    <view class='tableView'>
-        <label class='tableLabel'>最短时长</label>
-        <label class='tableLabel'>{{minRegisterTime}} s</label>
-    </view>
+
 </view>
-
-    <view bindtap='backHomePage' class='backView'>返回首页</view>
-
-</view>
-
-

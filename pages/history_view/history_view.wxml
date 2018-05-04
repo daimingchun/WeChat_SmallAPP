@@ -1,0 +1,201 @@
+<view class="MainContainer">
+    <view class='mainPage' wx:if="{{signal}}">
+
+        <view class='info-view'>
+            <label>测试时间：{{signal_data.timestamp}}</label>
+            <label>测试地点：{{signal_data.address_name}}</label>
+            <label>详细地点：{{signal_data.address_addr}}</label>
+            <label>备注信息：{{signal_data.comment}}</label>
+        </view>
+
+        <canvas disable-scroll="true" class='canvas' canvas-id="signal_rssiCanvas"></canvas>
+        <canvas disable-scroll="true" class='canvas' canvas-id="signal_snrCanvas"></canvas>
+        <canvas disable-scroll="true" class='canvas' canvas-id="signal_rsrqCanvas"></canvas>
+
+        <view class='tableView'>
+            <label class='tableLabel'>EARFCN</label>
+            <label class='tableLabel'>{{signal_data.earfcn}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>ECL</label>
+            <label class='tableLabel'>{{signal_data.ecl}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>PLMN</label>
+            <label class='tableLabel'>{{signal_data.plmn}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>BAND</label>
+            <label class='tableLabel'>{{signal_data.band}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>T3324</label>
+            <label class='tableLabel'>{{signal_data.t3324}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>T3412</label>
+            <label class='tableLabel'>{{signal_data.t3412}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>CELL ID</label>
+            <label class='tableLabel'>{{signal_data.cellid}}</label>
+        </view>
+    </view>
+
+
+    <view class='mainPage' wx:if="{{register}}">
+
+        <view class='info-view'>
+            <label>测试时间：{{register_data.timestamp}}</label>
+            <label>测试地点：{{register_data.address_name}}</label>
+            <label>详细地点：{{register_data.address_addr}}</label>
+            <label>备注信息：{{register_data.comment}}</label>
+        </view>
+
+        <canvas disable-scroll="true" class='canvas' canvas-id="registerCanvas"></canvas>
+
+        <view class='tableView'>
+            <label class='tableLabel'>测试次数</label>
+            <label class='tableLabel'>{{register_data.registerCounts}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>失败次数</label>
+            <label class='tableLabel'>{{register_data.registerFailCounts}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>成功率</label>
+            <label class='tableLabel'>{{register_data.successRate}} %</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>平均时长</label>
+            <label class='tableLabel'>{{register_data.averageRegisterTime}} s</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最大时长</label>
+            <label class='tableLabel'>{{register_data.maxRegisterTime}} s</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最短时长</label>
+            <label class='tableLabel'>{{register_data.minRegisterTime}} s</label>
+        </view>
+    </view>
+
+
+    <view class='mainPage' wx:if="{{ping}}">
+
+        <view class='info-view'>
+            <label>测试时间：{{ping_data.timestamp}}</label>
+            <label>测试地点：{{ping_data.address_name}}</label>
+            <label>详细地点：{{ping_data.address_addr}}</label>
+            <label>备注信息：{{ping_data.comment}}</label>
+        </view>
+
+        <canvas disable-scroll="true" class='canvas' canvas-id="pingCanvas"></canvas>
+
+        <view class='tableView'>
+            <label class='tableLabel'>测试次数</label>
+            <label class='tableLabel'>{{ping_data.pingCounts}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>失败次数</label>
+            <label class='tableLabel'>{{ping_data.pingFailCounts}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>成功率</label>
+            <label class='tableLabel'>{{ping_data.successRate}} %</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>平均延时</label>
+            <label class='tableLabel'>{{ping_data.averagepingTime}} ms</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最大延时</label>
+            <label class='tableLabel'>{{ping_data.maxpingTime}} ms</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最短延时</label>
+            <label class='tableLabel'>{{ping_data.minpingTime}} ms</label>
+        </view>
+    </view>
+
+
+    <view class='mainPage' wx:if="{{comprehensive}}">
+
+        <view class='info-view'>
+            <label>测试时间：{{comprehensive_data.timestamp}}</label>
+            <label>测试地点：{{comprehensive_data.address_name}}</label>
+            <label>详细地点：{{comprehensive_data.address_addr}}</label>
+            <label>备注信息：{{comprehensive_data.comment}}</label>
+        </view>
+
+        <canvas disable-scroll="true" class='canvas' canvas-id="comprehensive_registerCanvas"></canvas>
+        <view class='tableView'>
+            <label class='tableLabel'>平均时长</label>
+            <label class='tableLabel'>{{comprehensive_data.registerAvrTimes}} s</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最大时长</label>
+            <label class='tableLabel'>{{comprehensive_data.registerMaxTimes}} s</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最小时长</label>
+            <label class='tableLabel'>{{comprehensive_data.registerMinTimes}} s</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>成功率</label>
+            <label class='tableLabel'>{{comprehensive_data.registerSuccessRate}} %</label>
+        </view>
+        <canvas disable-scroll="true" class='canvas' canvas-id="comprehensive_pingCanvas"></canvas>
+        <view class='tableView'>
+            <label class='tableLabel'>平均延时</label>
+            <label class='tableLabel'>{{comprehensive_data.pingAvr}} ms</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最大延时</label>
+            <label class='tableLabel'>{{comprehensive_data.pingMax}} ms</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最小延时</label>
+            <label class='tableLabel'>{{comprehensive_data.pingMin}} ms</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>成功率</label>
+            <label class='tableLabel'>{{comprehensive_data.pingSuccessRate}} %</label>
+        </view>
+        <canvas disable-scroll="true" class='canvas' canvas-id="comprehensive_rssiCanvas"></canvas>
+        <view class='tableView'>
+            <label class='tableLabel'>平均值</label>
+            <label class='tableLabel'>{{comprehensive_data.rssiAvr}} dBm</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最大值</label>
+            <label class='tableLabel'>{{comprehensive_data.rssiMax}} dBm</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最小值</label>
+            <label class='tableLabel'>{{comprehensive_data.rssiMin}} dBm</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>成功率</label>
+            <label class='tableLabel'>{{comprehensive_data.rssiSuccessRate}} %</label>
+        </view>
+        <canvas disable-scroll="true" class='canvas' canvas-id="comprehensive_snrCanvas">
+        </canvas>
+        <view class='tableView'>
+            <label class='tableLabel'>平均值</label>
+            <label class='tableLabel'>{{comprehensive_data.snrAvr}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最大值</label>
+            <label class='tableLabel'>{{comprehensive_data.snrMax}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>最小值</label>
+            <label class='tableLabel'>{{comprehensive_data.snrMin}}</label>
+        </view>
+    </view>
+
+
+    <!-- <button type='warn' bindtap='backHomePage' class='button_back'>返回首页</button> -->
+
+</view>
