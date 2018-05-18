@@ -1,3 +1,5 @@
+var util = require('../../utils/util.js');  // 引用公共接口
+
 // history.js
 Page({
 
@@ -29,6 +31,33 @@ Page({
             },
             fail: function(res) {
                 console.log(res);
+            }
+        })
+
+        // 监听蓝牙数据
+        wx.onBLECharacteristicValueChange(function (res) {
+            console.log(`characteristic ${res.characteristicId} has changed, now is ${res.value}`);
+            console.log(util.hexCharCodeToStr(util.ab2hex(res.value)));
+            that.setData({
+                bleRecvStr: that.data.bleRecvStr + util.hexCharCodeToStr(util.ab2hex(res.value))
+            })
+            // 已接收到完整的应答数据
+            if ((that.data.bleRecvStr).indexOf("<Request>") != -1 && (that.data.bleRecvStr).indexOf("</Request>") != -1) {
+                // 历史记录
+                if ((that.data.bleRecvStr).indexOf("<historyList>") != -1 && (that.data.bleRecvStr).indexOf("</historyList>") != -1) {
+                    
+                    util.cm_ble_write("<Response>中移</Response>");
+                }
+
+                // 历史记录数据
+                if ((that.data.bleRecvStr).indexOf("<historyData>") != -1 && (that.data.bleRecvStr).indexOf("</historyData>") != -1) {
+
+                    util.cm_ble_write("<Response>123</Response>");
+                }
+
+                that.setData({
+                    bleRecvStr: "",
+                })
             }
         })
     },
