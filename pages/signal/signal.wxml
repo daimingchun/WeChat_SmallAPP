@@ -7,7 +7,7 @@
 
         <view class='tableView'>
             <label class='tableLabel'>RSSI</label>
-            <label class='tableLabel'>{{rssi}}dbm</label>
+            <label class='tableLabel'>{{rssi}} dBm</label>
         </view>
         <view class='tableView'>
             <label class='tableLabel'>SNR</label>
@@ -15,7 +15,11 @@
         </view>
         <view class='tableView'>
             <label class='tableLabel'>RSRQ</label>
-            <label class='tableLabel'>{{rsrq}}</label>
+            <label class='tableLabel'>{{rsrq}} dBm</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>RSRP</label>
+            <label class='tableLabel'>{{rsrp}} dBm</label>
         </view>
         <view class='tableView'>
             <label class='tableLabel'>EARFCN</label>
@@ -28,6 +32,10 @@
         <view class='tableView'>
             <label class='tableLabel'>PLMN</label>
             <label class='tableLabel'>{{plmn}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>APN</label>
+            <label class='tableLabel'>{{apn}}</label>
         </view>
         <view class='tableView'>
             <label class='tableLabel'>BAND</label>

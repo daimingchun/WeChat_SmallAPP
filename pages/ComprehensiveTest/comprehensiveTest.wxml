@@ -6,7 +6,7 @@
         综合测试时，会按照设置的次数进行驻网测试、信号质量查询、网络延时测试，并统计出各个测试项的测试结果，该测试可能会消耗较长的时间，请耐心等待。
         </text>
         <text class='titleText'>选择测试次数</text>
-        <slider min='1' max='100' step='1' show-value='true' class='slider' block-size='20' value='{{testCount}}' color='gray' bindchange='onTestTimeChange'></slider>
+        <slider min='1' max='20' step='1' show-value='true' class='slider' block-size='20' value='{{testCount}}' color='gray' bindchange='onTestTimeChange'></slider>
         <button class='testButton' type='{{buttonType}}' bindtap='onTestButtonClicked'>{{testButtonText}}</button>
         <text wx:if='{{onTesting}}' class='titleText'>测试进度</text>
         <progress wx:if='{{onTesting}}' class='progress' percent="{{progressValue}}" show-info='true' />

@@ -16,7 +16,7 @@ Page({
         Module_ver:"",  // 模组版本
         battery:"",     // 电池电量
         bat_vol:"",     // 电池电压
-        firware:"",     // 软件版本
+        firmware:"",     // 软件版本
         timerId:0,
     },
 
@@ -184,16 +184,25 @@ Page({
                     })
                 }
 
-                // IMEI
+                // firmware
                 if ((that.data.bleRecvStr).indexOf("<firmware>") != -1 && (that.data.bleRecvStr).indexOf("</firmware>") != -1) {
                     var head = (that.data.bleRecvStr).indexOf("<firmware>") + 10;
                     var end = (that.data.bleRecvStr).indexOf("</firmware>");
                     var firmwareRel = that.data.bleRecvStr.slice(head, end)
                     that.setData({
-                        firware: firmwareRel,
+                        firmware: firmwareRel,
                     })
                 }
 
+                // voltage
+                if ((that.data.bleRecvStr).indexOf("<voltage>") != -1 && (that.data.bleRecvStr).indexOf("</voltage>") != -1) {
+                    var head = (that.data.bleRecvStr).indexOf("<voltage>") + 9;
+                    var end = (that.data.bleRecvStr).indexOf("</voltage>");
+                    var voltage = parseFloat(that.data.bleRecvStr.slice(head, end), 10)
+                    that.setData({
+                        bat_vol: voltage + " V",
+                    })
+                }
 
                 // 清空蓝牙接收buffer
                 that.setData({

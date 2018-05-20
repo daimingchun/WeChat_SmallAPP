@@ -22,7 +22,7 @@
         <view class='TextView'>
             <label class='label'>电池电量: {{battery}}</label>
             <label class='label'>电池电压: {{bat_vol}}</label>
-            <label class='label'>软件版本: {{firware}}</label>
+            <label class='label'>软件版本: {{firmware}}</label>
         </view>
     </view>
 

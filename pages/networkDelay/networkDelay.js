@@ -364,7 +364,7 @@ Page({
                 //秒
                 var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
 
-                var timestamp = Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s;
+                var timestamp = Y + "-" + M + "-" + D + "_" + h + ":" + m + ":" + s;
                 console.log("保存的索引时间戳为：" + timestamp);
                 /**准备缓存的数据 */
                 var testData =

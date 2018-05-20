@@ -313,23 +313,25 @@ Page({
                     }
                     /* 更新数据 */
                     that.setData({
-                        pingAvr: (Number(totalTime) / Number(successCount)).toFixed(2),
                         pingMax: maxTime,
                         pingMin: minTime,
                         pingSuccessRate: ((Number(successCount) / Number(that.data.pingDelay.length)) * 100).toFixed(2),
                     })
+
+                    if (successCount > 0)
+                    {
+                        that.setData({
+                            pingAvr: (Number(totalTime) / Number(successCount)).toFixed(2),
+                        })
+                    }
                 }
 
                 // RSSI
-                if ((that.data.bleRecvStr).indexOf("<csq>") != -1 && (that.data.bleRecvStr).indexOf("</csq>") != -1) {
+                if ((that.data.bleRecvStr).indexOf("<rssi>") != -1 && (that.data.bleRecvStr).indexOf("</rssi>") != -1) {
 
-                    var head = (that.data.bleRecvStr).indexOf("<csq>") + 5;
+                    var head = (that.data.bleRecvStr).indexOf("<rssi>") + 6;
                     var end = (that.data.bleRecvStr).indexOf("</csq>");
-                    var value = parseInt(that.data.bleRecvStr.slice(head, end), 10);
-                    if(value == 99) {
-                        value = 0;
-                    }
-                    value = Number(value*2 - 113);
+                    var value = parseInt(that.data.bleRecvStr.slice(head, end), 10)/10;
 
                     var rssi_temp = that.data.rssi;
                     rssi_temp.push(value);
@@ -340,19 +342,19 @@ Page({
 
                     var successCount = 0;
                     var totalRssi = 0;
-                    var maxRssi = -113;
+                    var maxRssi = -32678;
                     var minRssi = 0;
                     for (var i = 0; i < that.data.rssi.length; i++) {
-                        if (that.data.rssi[i] == -113) {
+                        if (that.data.rssi[i] == 0) {
                             continue;
                         }
                         successCount++;
                         totalRssi = (Number(totalRssi) + Number(that.data.rssi[i]));
                         if (that.data.rssi[i] > maxRssi) {
-                            maxRssi = Number(that.data.rssi[i]);
+                            maxRssi = Number(that.data.rssi[i]).toFixed(2);
                         }
                         if (that.data.rssi[i] < minRssi) {
-                            minRssi = Number(that.data.rssi[i]);
+                            minRssi = Number(that.data.rssi[i]).toFixed(2);
                         }
                     }
                     /* 更新数据 */
@@ -369,7 +371,7 @@ Page({
 
                     var head = (that.data.bleRecvStr).indexOf("<snr>") + 5;
                     var end = (that.data.bleRecvStr).indexOf("</snr>");
-                    var value = parseInt(that.data.bleRecvStr.slice(head, end), 10);
+                    var value = parseInt(that.data.bleRecvStr.slice(head, end), 10)/10;
 
                     var snr_temp = that.data.snr;
                     snr_temp.push(value);
@@ -384,10 +386,10 @@ Page({
                     for (var i = 0; i < that.data.snr.length; i++) {
                         totalsnr = (Number(totalsnr) + Number(that.data.snr[i]));
                         if (that.data.snr[i] > maxsnr) {
-                            maxsnr = Number(that.data.snr[i]);
+                            maxsnr = Number(that.data.snr[i]).toFixed(2);
                         }
                         if (that.data.snr[i] < minsnr) {
-                            minsnr = Number(that.data.snr[i]);
+                            minsnr = Number(that.data.snr[i]).toFixed(2);
                         }
                     }
                     /* 更新数据 */
@@ -629,7 +631,7 @@ Page({
                 //秒
                 var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
 
-                var timestamp = Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s;
+                var timestamp = Y + "-" + M + "-" + D + "_" + h + ":" + m + ":" + s;
                 console.log("保存的索引时间戳为：" + timestamp);
                 /**准备缓存的数据 */
                 var testData =

@@ -46,13 +46,13 @@ Page({
                 // 历史记录
                 if ((that.data.bleRecvStr).indexOf("<historyList>") != -1 && (that.data.bleRecvStr).indexOf("</historyList>") != -1) {
                     
-                    util.cm_ble_write("<Response>中移</Response>");
+                    util.cm_ble_write("<Response>44242647216478296478239462719846214962398461278946</Response>");
                 }
 
                 // 历史记录数据
                 if ((that.data.bleRecvStr).indexOf("<historyData>") != -1 && (that.data.bleRecvStr).indexOf("</historyData>") != -1) {
 
-                    util.cm_ble_write("<Response>123</Response>");
+                    util.cm_ble_write("<Response>111111111111111111111111111111111111111111111111111111111111111</Response>");
                 }
 
                 that.setData({

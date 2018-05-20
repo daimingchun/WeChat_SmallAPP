@@ -15,13 +15,16 @@ Page({
         rssi: 0,
         snr: 0,
         rsrq: 0,
+        rsrp: 0,
         earfcn: "NULL",
         ecl: "NULL",
         plmn: "NULL",
+        apn: "NULL",
         band: "NULL",
         t3324: "NULL",
         t3412: "NULL",
         cellid: "NULL",
+
         timerId: 0,
         showModal: false,
         remarkStr: "",
@@ -162,13 +165,7 @@ Page({
                         that.data.rssiData.shift()
                     }
 
-                    var rssiValue = parseInt(that.data.bleRecvStr.slice(head, end), 10)
-
-                    // if (rssiValue == 99) {
-                    //     rssiValue = 0;
-                    // }
-
-                    // var rssiValue = rssiValue * 2 + (-113)
+                    var rssiValue = parseInt(that.data.bleRecvStr.slice(head, end), 10)/10
 
                     // 更新rssi值
                     that.setData({
@@ -383,6 +380,25 @@ Page({
                         cellid: that.data.bleRecvStr.slice(head, end)
                     })
                 }
+                // rsrp
+                if ((that.data.bleRecvStr).indexOf("<rsrp>") != -1 && (that.data.bleRecvStr).indexOf("</rsrp>") != -1) {
+                    console.log("find rsrp!")
+                    var head = (that.data.bleRecvStr).indexOf("<rsrp>") + 6;
+                    var end = (that.data.bleRecvStr).indexOf("</rsrp>");
+
+                    that.setData({
+                        rsrp: parseInt(that.data.bleRecvStr.slice(head, end), 10)/10
+                    })
+                }
+                // apn
+                if ((that.data.bleRecvStr).indexOf("<apn>") != -1 && (that.data.bleRecvStr).indexOf("</apn>") != -1) {
+                    var head = (that.data.bleRecvStr).indexOf("<apn>") + 5;
+                    var end = (that.data.bleRecvStr).indexOf("</apn>");
+
+                    that.setData({
+                        apn: that.data.bleRecvStr.slice(head, end)
+                    })
+                }
 
                 // 清空蓝牙接收buffer
                 that.data.bleRecvStr = "";
@@ -449,7 +465,7 @@ Page({
                 //秒  
                 var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();  
 
-                var timestamp = Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s;
+                var timestamp = Y + "-" + M + "-" + D + "_" + h + ":" + m + ":" + s;
                 console.log("保存的索引时间戳为：" + timestamp);
                 /**准备缓存的数据 */
                 var testData =
