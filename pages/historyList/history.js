@@ -35,31 +35,31 @@ Page({
         })
 
         // 监听蓝牙数据
-        wx.onBLECharacteristicValueChange(function (res) {
-            console.log(`characteristic ${res.characteristicId} has changed, now is ${res.value}`);
-            console.log(util.hexCharCodeToStr(util.ab2hex(res.value)));
-            that.setData({
-                bleRecvStr: that.data.bleRecvStr + util.hexCharCodeToStr(util.ab2hex(res.value))
-            })
-            // 已接收到完整的应答数据
-            if ((that.data.bleRecvStr).indexOf("<Request>") != -1 && (that.data.bleRecvStr).indexOf("</Request>") != -1) {
-                // 历史记录
-                if ((that.data.bleRecvStr).indexOf("<historyList>") != -1 && (that.data.bleRecvStr).indexOf("</historyList>") != -1) {
+        // wx.onBLECharacteristicValueChange(function (res) {
+        //     console.log(`characteristic ${res.characteristicId} has changed, now is ${res.value}`);
+        //     console.log(util.hexCharCodeToStr(util.ab2hex(res.value)));
+        //     that.setData({
+        //         bleRecvStr: that.data.bleRecvStr + util.hexCharCodeToStr(util.ab2hex(res.value))
+        //     })
+        //     // 已接收到完整的应答数据
+        //     if ((that.data.bleRecvStr).indexOf("<Request>") != -1 && (that.data.bleRecvStr).indexOf("</Request>") != -1) {
+        //         // 历史记录
+        //         if ((that.data.bleRecvStr).indexOf("<historyList>") != -1 && (that.data.bleRecvStr).indexOf("</historyList>") != -1) {
                     
-                    util.cm_ble_write("<Response>44242647216478296478239462719846214962398461278946</Response>");
-                }
+        //             util.cm_ble_write("<Response></Response>");
+        //         }
 
-                // 历史记录数据
-                if ((that.data.bleRecvStr).indexOf("<historyData>") != -1 && (that.data.bleRecvStr).indexOf("</historyData>") != -1) {
+        //         // 历史记录数据
+        //         if ((that.data.bleRecvStr).indexOf("<historyData>") != -1 && (that.data.bleRecvStr).indexOf("</historyData>") != -1) {
 
-                    util.cm_ble_write("<Response>111111111111111111111111111111111111111111111111111111111111111</Response>");
-                }
+        //             util.cm_ble_write("<Response></Response>");
+        //         }
 
-                that.setData({
-                    bleRecvStr: "",
-                })
-            }
-        })
+        //         that.setData({
+        //             bleRecvStr: "",
+        //         })
+        //     }
+        // })
     },
 
     /**
