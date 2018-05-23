@@ -22,7 +22,7 @@
     align-content: center;
     align-items: center;
     margin-top: 20rpx;
-    padding: 20rpx;
+    padding: 20rpx; 
     border: 1rpx groove lightgray;
     width: 90%;
 }

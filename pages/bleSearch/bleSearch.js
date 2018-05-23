@@ -242,12 +242,22 @@ function ab2hex(buffer) {
 }
 
 
-// wx.onBLEConnectionStateChange(function (res) {
-//     // 该方法回调中可以用于处理连接意外断开等异常情况
-//     console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`)
-//     // app.globalData.bleDeviceName = res.name
-//     // app.globalData.bleDeviceState = res.connected
-// })
+wx.onBLEConnectionStateChange(function (res) {
+    // 该方法回调中可以用于处理连接意外断开等异常情况
+    console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`)
+    if (!res.connected) {
+        // 更新连接设备状态信息
+        app.globalData.bleConnectedDeviceId = null;
+        app.globalData.bleConnectDeviceName = null;
+        app.globalData.bleDeviceConnectState = false;
+        wx.hideLoading();
+        wx.hideToast();
+        wx.showToast({
+            title: '连接断开',
+            icon: "none",
+        })
+    }
+})
 
 
 

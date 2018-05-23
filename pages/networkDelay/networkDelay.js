@@ -124,11 +124,11 @@ Page({
 
                     var head = (that.data.bleRecvStr).indexOf("<pingDelay>") + 11;
                     var end = (that.data.bleRecvStr).indexOf("</pingDelay>");
-                    // 获取驻网时间值
+                    // 获取ping延时时间值
                     var value = parseInt(that.data.bleRecvStr.slice(head, end), 10);
 
-                    // 只保留最近20次测试数据
-                    if (that.data.pingTime.length >= 100) {
+                    // 只保留最近x次测试数据
+                    if (that.data.pingTime.length >= 25) {
                         that.data.pingTime.shift()
                     }
 
@@ -198,7 +198,7 @@ Page({
                     }
 
                     /**增加绘图项 */
-                    if (that.data.canvasLabels.length < 100) {
+                    if (that.data.canvasLabels.length < 25) {
                         that.data.canvasLabels.push("");
                     }
                     // 绘制网络延时时间走势图
@@ -227,7 +227,7 @@ Page({
                             width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
                             height: 200,
                             animation: false,
-                            dataPointShape: false,
+                            dataPointShape: true,
                         });
                     })
                 }
@@ -324,9 +324,40 @@ Page({
      * 隐藏模态对话框
      */
     hideModal: function () {
+        var that = this;
         this.setData({
             showModal: false
         });
+
+        // 绘制网络延时时间走势图
+        app.deviceInfo.then(function (deviceInfo) {
+            console.log('设备信息', deviceInfo)
+            new wxCharts({
+                canvasId: 'pingCanvas',
+                type: 'line',
+                categories: that.data.canvasLabels,
+                series: [{
+                    name: 'PING延迟（' + value + 'ms）',
+                    format: function (val) {
+                        return val.toFixed(0);
+                    },
+                    data: that.data.pingTime,
+                }],
+
+                yAxis: {
+                    title: '网络延迟',
+                    format: function (val) {
+                        return val.toFixed(1);
+                    },
+                    min: 0
+                },
+                dataLabel: false,
+                width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                height: 200,
+                animation: false,
+                dataPointShape: true,
+            });
+        })
     },
     /**
      * 对话框取消按钮点击事件

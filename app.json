@@ -16,7 +16,7 @@
         "backgroundTextStyle": "light",
         "backgroundColor": "#C9C9C9",
         "navigationBarBackgroundColor": "#1C86EE",
-        "navigationBarTitleText": "NB-IoT网络测试",
+        "navigationBarTitleText": "找网（NB-IoT）",
         "navigationBarTextStyle": "white"
     }
 }

@@ -8,9 +8,9 @@
             <label>备注信息：{{signal_data.comment}}</label>
         </view>
 
-        <canvas disable-scroll="true" class='canvas' canvas-id="signal_rssiCanvas"></canvas>
+        <canvas disable-scroll="true" class='canvas' canvas-id="signal_Canvas"></canvas>
         <canvas disable-scroll="true" class='canvas' canvas-id="signal_snrCanvas"></canvas>
-        <canvas disable-scroll="true" class='canvas' canvas-id="signal_rsrqCanvas"></canvas>
+        <!-- <canvas disable-scroll="true" class='canvas' canvas-id="signal_rsrqCanvas"></canvas> -->
 
         <view class='tableView'>
             <label class='tableLabel'>EARFCN</label>
@@ -23,6 +23,10 @@
         <view class='tableView'>
             <label class='tableLabel'>PLMN</label>
             <label class='tableLabel'>{{signal_data.plmn}}</label>
+        </view>
+        <view class='tableView'>
+            <label class='tableLabel'>APN</label>
+            <label class='tableLabel'>{{signal_data.apn}}</label>
         </view>
         <view class='tableView'>
             <label class='tableLabel'>BAND</label>

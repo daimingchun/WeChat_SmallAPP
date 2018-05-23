@@ -29,11 +29,8 @@ Page({
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function (options) {
-        // 修改顶部导航条内容
-        wx.setNavigationBarTitle({
-            title: '驻网测试'
-        });
+    onShow: function (options) {
+        
     },
 
     /**
@@ -46,17 +43,18 @@ Page({
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function () {
+    onLoad: function () {
         var that = this;
+        // 修改顶部导航条内容
+        wx.setNavigationBarTitle({
+            title: '驻网测试'
+        });
         if (app.globalData.bleDeviceConnectState) {
-            setTimeout(
-                function(){
-                    wx.showLoading({
-                        title: '正在测试',
-                    })
-                    util.cm_ble_write("<Request>attachTime</Request>");
-                },2000
-            );
+            wx.showLoading({
+                title: '正在测试',
+            })
+            util.cm_ble_write("<Request>attachTime</Request>");
+            
             clearInterval(that.data.timerId);
             that.data.timerId = setInterval(
                 function () {
@@ -142,8 +140,8 @@ Page({
                     // 获取驻网时间值
                     var value = parseInt(that.data.bleRecvStr.slice(head, end), 10);
 
-                    // 只保留最近20次测试数据
-                    if (that.data.registerTime.length >= 20) {
+                    // 只保留最近x次测试数据
+                    if (that.data.registerTime.length >= 25) {
                         that.data.registerTime.shift()
                     }
 
@@ -209,7 +207,7 @@ Page({
                         })
                     }
                     /**增加绘图项 */
-                    if (that.data.canvasLabels.length < 20) {
+                    if (that.data.canvasLabels.length < 25) {
                         that.data.canvasLabels.push("");
                     }
                     // 绘制驻网时间走势图
@@ -319,9 +317,39 @@ Page({
      * 隐藏模态对话框
      */
     hideModal: function () {
+        var that = this;
         this.setData({
             showModal: false
         });
+
+        // 绘制驻网时间走势图
+        app.deviceInfo.then(function (deviceInfo) {
+            console.log('设备信息', deviceInfo)
+            new wxCharts({
+                canvasId: 'registerCanvas',
+                type: 'line',
+                categories: that.data.canvasLabels,
+                series: [{
+                    name: '驻网时间（s）',
+                    format: function (val) {
+                        return val.toFixed(0);
+                    },
+                    data: that.data.registerTime,
+                }],
+
+                yAxis: {
+                    title: '驻网时间（s）',
+                    format: function (val) {
+                        return val.toFixed(1);
+                    },
+                    min: 0
+                },
+                dataLabel: false,
+                width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                height: 300,
+                animation: false
+            });
+        })
     },
     /**
      * 对话框取消按钮点击事件

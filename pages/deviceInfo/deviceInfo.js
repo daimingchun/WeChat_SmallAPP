@@ -23,11 +23,8 @@ Page({
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function (options) {
-        // 修改顶部导航条内容
-        wx.setNavigationBarTitle({
-            title: '设备信息'
-        });
+    onShow: function (options) {
+        
     },
 
     /**
@@ -40,9 +37,16 @@ Page({
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function () {
+    onLoad: function () {
         var that = this;
+        // 修改顶部导航条内容
+        wx.setNavigationBarTitle({
+            title: '设备信息'
+        });
         if (app.globalData.bleDeviceConnectState) {
+            wx.showLoading({
+                title: '正在获取',
+            });
             util.cm_ble_write("<Request>deviceInfo</Request>")
             that.data.timerId = setInterval(
                 function () {
@@ -50,11 +54,8 @@ Page({
 
                         util.cm_ble_write("<Request>deviceInfo</Request>")
                     }
-                }, 60000
+                }, 20000
             );
-            wx.showLoading({
-                title: '正在获取',
-            })
         }
         else {
             // 显示提示框
@@ -202,6 +203,67 @@ Page({
                     that.setData({
                         bat_vol: voltage + " V",
                     })
+
+                    if (voltage > 4.2) {
+                        that.setData({
+                            battery: "100%",
+                        })
+                    }
+                    else if (voltage > 4.08) {
+                        that.setData({
+                            battery: "90%",
+                        })
+                    }
+                    else if (voltage > 4) {
+                        that.setData({
+                            battery: "80%",
+                        })
+                    }
+                    else if (voltage > 3.93) {
+                        that.setData({
+                            battery: "70%",
+                        })
+                    }
+                    else if (voltage > 3.87) {
+                        that.setData({
+                            battery: "60%",
+                        })
+                    }
+                    else if (voltage > 3.82) {
+                        that.setData({
+                            battery: "50%",
+                        })
+                    }
+                    else if (voltage > 3.79) {
+                        that.setData({
+                            battery: "40%",
+                        })
+                    }
+                    else if (voltage > 3.77) {
+                        that.setData({
+                            battery: "30%",
+                        })
+                    }
+                    else if (voltage > 3.73) {
+                        that.setData({
+                            battery: "20%",
+                        })
+                    }
+                    else if (voltage > 3.7) {
+                        that.setData({
+                            battery: "15%",
+                        })
+                    }
+                    else if (voltage > 3.68) {
+                        that.setData({
+                            battery: "10%",
+                        })
+                    }
+                    else if (voltage > 3.5) {
+                        that.setData({
+                            battery: "5%",
+                        })
+                    }
                 }
 
                 // 清空蓝牙接收buffer

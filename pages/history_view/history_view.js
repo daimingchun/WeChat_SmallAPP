@@ -116,6 +116,7 @@ Page({
                                 address_name : historyData[i].address_name,
                                 comment : historyData[i].comment,
                                 address_addr : historyData[i].address_addr,
+                                apn: historyData[i].apn_t,
                             };
 
                             /**更新数据 */
@@ -125,11 +126,11 @@ Page({
                             })
 
                             that.data.signal_data.canvasLabels = historyData[i].canvasLabels_t;
-                            // 绘制CSQ走势图
+                            // 绘制RSSI走势图
                             app.deviceInfo.then(function (deviceInfo) {
                                 console.log('设备信息', deviceInfo)
                                 new wxCharts({
-                                    canvasId: 'signal_rssiCanvas',
+                                    canvasId: 'signal_Canvas',
                                     type: 'line',
                                     categories: that.data.signal_data.canvasLabels,
                                     series: [{
@@ -138,10 +139,24 @@ Page({
                                             return val.toFixed(0);
                                         },
                                         data: historyData[i].rssiData_t,
+                                    },
+                                    {
+                                        name: "RSRQ(dBm)",
+                                        format: function (val) {
+                                            return val.toFixed(0);
+                                        },
+                                        data: historyData[i].rsrqData_t,
+                                    },
+                                    {
+                                        name: "RSRP(dBm)",
+                                        format: function (val) {
+                                            return val.toFixed(0);
+                                        },
+                                        data: historyData[i].rsrpData_t,
                                     }],
 
                                     yAxis: {
-                                        title: 'RSSI (信号强度)',
+                                        title: '信号强度',
                                         format: function (val) {
                                             return val.toFixed(1);
                                         },
@@ -182,33 +197,33 @@ Page({
                                 });
                             })
                             // 绘制RSRQ走势图
-                            app.deviceInfo.then(function (deviceInfo) {
-                                console.log('设备信息', deviceInfo)
-                                new wxCharts({
-                                    canvasId: 'signal_rsrqCanvas',
-                                    type: 'line',
-                                    categories: that.data.signal_data.canvasLabels,
-                                    series: [{
-                                        name: "RSRQ(dBm)",
-                                        format: function (val) {
-                                            return val.toFixed(0);
-                                        },
-                                        data: historyData[i].rsrqData_t,
-                                    }],
+                            // app.deviceInfo.then(function (deviceInfo) {
+                            //     console.log('设备信息', deviceInfo)
+                            //     new wxCharts({
+                            //         canvasId: 'signal_rsrqCanvas',
+                            //         type: 'line',
+                            //         categories: that.data.signal_data.canvasLabels,
+                            //         series: [{
+                            //             name: "RSRQ(dBm)",
+                            //             format: function (val) {
+                            //                 return val.toFixed(0);
+                            //             },
+                            //             data: historyData[i].rsrqData_t,
+                            //         }],
 
-                                    yAxis: {
-                                        title: 'RSRQ (参考信号接收质量)',
-                                        format: function (val) {
-                                            return val.toFixed(1);
-                                        },
-                                        min: 0
-                                    },
-                                    dataLabel: false,
-                                    width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
-                                    height: 180,
-                                    animation: false
-                                });
-                            })
+                            //         yAxis: {
+                            //             title: 'RSRQ (参考信号接收质量)',
+                            //             format: function (val) {
+                            //                 return val.toFixed(1);
+                            //             },
+                            //             min: 0
+                            //         },
+                            //         dataLabel: false,
+                            //         width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                            //         height: 180,
+                            //         animation: false
+                            //     });
+                            // })
                         }
                         else if (historyData[i].testType == "驻网测试") {
                             var tempData = {

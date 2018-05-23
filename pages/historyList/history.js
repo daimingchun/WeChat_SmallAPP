@@ -45,8 +45,7 @@ Page({
         //     if ((that.data.bleRecvStr).indexOf("<Request>") != -1 && (that.data.bleRecvStr).indexOf("</Request>") != -1) {
         //         // 历史记录
         //         if ((that.data.bleRecvStr).indexOf("<historyList>") != -1 && (that.data.bleRecvStr).indexOf("</historyList>") != -1) {
-                    
-        //             util.cm_ble_write("<Response></Response>");
+        //             util.cm_ble_write("<Response>" + JSON.stringify(that.data.historyData) + "</Response>");
         //         }
 
         //         // 历史记录数据

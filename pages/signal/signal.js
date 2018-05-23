@@ -12,6 +12,7 @@ Page({
         rssiData: [],
         snrData: [],
         rsrqData: [],
+        rsrpData: [],
         rssi: 0,
         snr: 0,
         rsrq: 0,
@@ -24,17 +25,13 @@ Page({
         t3324: "NULL",
         t3412: "NULL",
         cellid: "NULL",
-
         timerId: 0,
         showModal: false,
         remarkStr: "",
     },
 
-    onLoad: function () {
-        // 修改顶部导航条内容
-        wx.setNavigationBarTitle({
-            title: '网络参数'
-        });
+    onShow: function () {
+        
     },
 
     /**
@@ -53,19 +50,21 @@ Page({
         })
     },
     /** */
-    onShow: function () {
+    onLoad: function () {
         var that = this;
+
+        // 修改顶部导航条内容
+        wx.setNavigationBarTitle({
+            title: '网络参数'
+        });
 
         if (app.globalData.bleDeviceConnectState) {
             
-            setTimeout(
-                function(){
-                    wx.showLoading({
-                        title: '正在测试',
-                    })
-                    util.cm_ble_write("<Request>radioInfo</Request>")
-                },1500
-            );
+            wx.showLoading({
+                title: '正在测试',
+            })
+            util.cm_ble_write("<Request>radioInfo</Request>");
+            
             /**定时发送请求 */
             clearInterval(that.data.timerId);
             that.data.timerId = setInterval(
@@ -161,7 +160,7 @@ Page({
                     var head = (that.data.bleRecvStr).indexOf("<rssi>") + 6;
                     var end = (that.data.bleRecvStr).indexOf("</rssi>");
 
-                    if (that.data.rssiData.length >= 100) {
+                    if (that.data.rssiData.length >= 25) {
                         that.data.rssiData.shift()
                     }
 
@@ -180,17 +179,17 @@ Page({
                     var head = (that.data.bleRecvStr).indexOf("<snr>") + 5;
                     var end = (that.data.bleRecvStr).indexOf("</snr>");
 
-                    if (that.data.snrData.length >= 100) {
+                    if (that.data.snrData.length >= 25) {
                         that.data.snrData.shift()
                     }
                     var snrValue = parseInt(that.data.bleRecvStr.slice(head, end), 10)
                     // snr
                     that.setData({
-                        snr: snrValue,
+                        snr: (snrValue/10).toFixed(2),
                     })
 
                     if (snrValue != -32768) {
-                        that.data.snrData.push(snrValue)
+                        that.data.snrData.push((snrValue/10).toFixed(2))
                     } else {
                         that.data.snrData.push(0)
                     }
@@ -201,7 +200,7 @@ Page({
                     var head = (that.data.bleRecvStr).indexOf("<rsrq>") + 6;
                     var end = (that.data.bleRecvStr).indexOf("</rsrq>");
 
-                    if (that.data.rsrqData.length >= 100) {
+                    if (that.data.rsrqData.length >= 25) {
                         that.data.rsrqData.shift()
                     }
 
@@ -219,11 +218,28 @@ Page({
                     }
                     console.log(that.data.rsrqData)
                 }
+                // rsrp
+                if ((that.data.bleRecvStr).indexOf("<rsrp>") != -1 && (that.data.bleRecvStr).indexOf("</rsrp>") != -1) {
+                    console.log("find rsrp!")
+                    var head = (that.data.bleRecvStr).indexOf("<rsrp>") + 6;
+                    var end = (that.data.bleRecvStr).indexOf("</rsrp>");
+
+                    if (that.data.rsrpData.length >= 25) {
+                        that.data.rsrpData.shift()
+                    }
+
+                    var rsrpValue = parseInt(that.data.bleRecvStr.slice(head, end), 10)/10
+
+                    that.setData({
+                        rsrp: rsrpValue
+                    })
+                    that.data.rsrpData.push(rsrpValue)
+                }
                 /**增加绘图项 */
-                if (that.data.canvasLabels.length < 100) {
+                if (that.data.canvasLabels.length < 25) {
                     that.data.canvasLabels.push("");
                 }
-                // 绘制rssi、RSRQ走势图
+                // 绘制rssi、RSRQ、RSRP走势图
                 app.deviceInfo.then(function (deviceInfo) {
                     console.log('设备信息', deviceInfo)
                     new wxCharts({
@@ -243,6 +259,13 @@ Page({
                                 return val.toFixed(0);
                             },
                             data: that.data.rsrqData,
+                        },
+                        {
+                            name: 'RSRP' + "(" + that.data.rsrp + "dBm)",
+                            format: function (val) {
+                                return val.toFixed(0);
+                            },
+                            data: that.data.rsrpData,
                         }],
 
                         yAxis: {
@@ -256,7 +279,7 @@ Page({
                         width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
                         height: 180,
                         animation: false,
-                        dataPointShape: false,
+                        dataPointShape: true,
                     });
                 })
                 // 绘制SNR走势图
@@ -285,37 +308,9 @@ Page({
                         width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
                         height: 180,
                         animation: false,
-                        dataPointShape: false,
+                        dataPointShape: true,
                     });
                 })
-                // 绘制RSRQ走势图
-                // app.deviceInfo.then(function (deviceInfo) {
-                //     console.log('设备信息', deviceInfo)
-                //     new wxCharts({
-                //         canvasId: 'rsrqCanvas',
-                //         type: 'line',
-                //         categories: that.data.canvasLabels,
-                //         series: [{
-                //             name: 'RSRQ' + "(" + that.data.rsrq + ")",
-                //             format: function (val) {
-                //                 return val.toFixed(0);
-                //             },
-                //             data: that.data.rsrqData,
-                //         }],
-
-                //         yAxis: {
-                //             title: 'RSRQ (参考信号接收质量)',
-                //             format: function (val) {
-                //                 return val.toFixed(1);
-                //             },
-                //             min: 0
-                //         },
-                //         dataLabel: false,
-                //         width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
-                //         height: 180,
-                //         animation: false
-                //     });
-                // })
                 // earfcn
                 if ((that.data.bleRecvStr).indexOf("<earfcn>") != -1 && (that.data.bleRecvStr).indexOf("</earfcn>") != -1) {
                     var head = (that.data.bleRecvStr).indexOf("<earfcn>") + 8;
@@ -380,16 +375,6 @@ Page({
                         cellid: that.data.bleRecvStr.slice(head, end)
                     })
                 }
-                // rsrp
-                if ((that.data.bleRecvStr).indexOf("<rsrp>") != -1 && (that.data.bleRecvStr).indexOf("</rsrp>") != -1) {
-                    console.log("find rsrp!")
-                    var head = (that.data.bleRecvStr).indexOf("<rsrp>") + 6;
-                    var end = (that.data.bleRecvStr).indexOf("</rsrp>");
-
-                    that.setData({
-                        rsrp: parseInt(that.data.bleRecvStr.slice(head, end), 10)/10
-                    })
-                }
                 // apn
                 if ((that.data.bleRecvStr).indexOf("<apn>") != -1 && (that.data.bleRecvStr).indexOf("</apn>") != -1) {
                     var head = (that.data.bleRecvStr).indexOf("<apn>") + 5;
@@ -425,9 +410,83 @@ Page({
      * 隐藏模态对话框
      */
     hideModal: function () {
+        var that = this;
         this.setData({
             showModal: false
         });
+
+        // 绘制rssi、RSRQ、RSRP走势图
+        app.deviceInfo.then(function (deviceInfo) {
+            console.log('设备信息', deviceInfo)
+            new wxCharts({
+                canvasId: 'rssiCanvas',
+                type: 'line',
+                categories: that.data.canvasLabels,
+                series: [{
+                    name: 'RSSI' + "(" + that.data.rssi + "dBm)",
+                    format: function (val) {
+                        return val.toFixed(0);
+                    },
+                    data: that.data.rssiData,
+                },
+                {
+                    name: 'RSRQ' + "(" + that.data.rsrq + "dBm)",
+                    format: function (val) {
+                        return val.toFixed(0);
+                    },
+                    data: that.data.rsrqData,
+                },
+                {
+                    name: 'RSRP' + "(" + that.data.rsrp + "dBm)",
+                    format: function (val) {
+                        return val.toFixed(0);
+                    },
+                    data: that.data.rsrpData,
+                }],
+
+                yAxis: {
+                    title: '信号强度',
+                    format: function (val) {
+                        return val.toFixed(1);
+                    },
+                    min: 0
+                },
+                dataLabel: false,
+                width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                height: 180,
+                animation: false,
+                dataPointShape: true,
+            });
+        })
+        // 绘制SNR走势图
+        app.deviceInfo.then(function (deviceInfo) {
+            console.log('设备信息', deviceInfo)
+            new wxCharts({
+                canvasId: 'snrCanvas',
+                type: 'line',
+                categories: that.data.canvasLabels,
+                series: [{
+                    name: 'SNR' + "(" + that.data.snr + ")",
+                    format: function (val) {
+                        return val.toFixed(0);
+                    },
+                    data: that.data.snrData,
+                }],
+
+                yAxis: {
+                    title: 'SNR (信噪比)',
+                    format: function (val) {
+                        return val.toFixed(1);
+                    },
+                    min: 0
+                },
+                dataLabel: false,
+                width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                height: 180,
+                animation: false,
+                dataPointShape: true,
+            });
+        })
     },
     /**
      * 对话框取消按钮点击事件
@@ -475,9 +534,11 @@ Page({
                     rssiData_t: that.data.rssiData,
                     snrData_t: that.data.snrData,
                     rsrqData_t: that.data.rsrqData,
+                    rsrpData_t: that.data.rsrpData,
                     earfcn_t: that.data.earfcn,
                     ecl_t: that.data.ecl,
                     plmn_t: that.data.plmn,
+                    apn_t: that.data.apn,
                     band_t: that.data.band,
                     t3324_t: that.data.t3324,
                     t3412_t: that.data.t3412,

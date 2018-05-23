@@ -10,7 +10,7 @@
         <button class='testButton' type='{{buttonType}}' bindtap='onTestButtonClicked'>{{testButtonText}}</button>
         <text wx:if='{{onTesting}}' class='titleText'>测试进度</text>
         <progress wx:if='{{onTesting}}' class='progress' percent="{{progressValue}}" show-info='true' />
-        <canvas wx:if="{{attachTime.length}}" disable-scroll="true" class='canvas' canvas-id="registerCanvas"></canvas>
+        <canvas wx:if="{{attachTime.length && !showModal}}" disable-scroll="true" class='canvas' canvas-id="registerCanvas"></canvas>
         <view class='tableView' wx:if="{{attachTime.length}}">
             <label class='tableLabel'>平均时长</label>
             <label class='tableLabel'>{{registerAvrTimes}} s</label>

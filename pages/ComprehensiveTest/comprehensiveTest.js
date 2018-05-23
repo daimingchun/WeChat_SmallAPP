@@ -104,11 +104,8 @@ Page({
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function (options) {
-        // 修改顶部导航条内容
-        wx.setNavigationBarTitle({
-            title: '综合测试'
-        });
+    onShow: function (options) {
+        
     },
 
     /**
@@ -121,9 +118,13 @@ Page({
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function () {
+    onLoad: function () {
 
         var that = this;
+        // 修改顶部导航条内容
+        wx.setNavigationBarTitle({
+            title: '综合测试'
+        });
         if (!app.globalData.bleDeviceConnectState) {
 
             // 显示提示框
@@ -571,7 +572,6 @@ Page({
 
     },
 
-
     /**
      * 保存信号测试数据
      */
@@ -591,9 +591,134 @@ Page({
      * 隐藏模态对话框
      */
     hideModal: function () {
+        var that = this;
         this.setData({
             showModal: false
         });
+
+        /** 绘制驻网时间走势图 */
+        if (that.data.attachTime.length > 0) {
+            app.deviceInfo.then(function (deviceInfo) {
+                console.log('设备信息', deviceInfo)
+                new wxCharts({
+                    canvasId: 'registerCanvas',
+                    type: 'line',
+                    categories: that.data.canvasLabels,
+                    series: [{
+                        name: "驻网时间（秒）",
+                        format: function (val) {
+                            return val.toFixed(0);
+                        },
+                        data: that.data.attachTime,
+                    }],
+
+                    yAxis: {
+                        title: '驻网时间（秒）',
+                        format: function (val) {
+                            return val.toFixed(1);
+                        },
+                        min: 0
+                    },
+                    dataLabel: false,
+                    width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                    height: 180,
+                    animation: false
+                });
+            })
+        }
+
+        /** 绘制网络延时走势图 */
+        if (that.data.pingDelay.length > 0) {
+            app.deviceInfo.then(function (deviceInfo) {
+                console.log('设备信息', deviceInfo)
+                new wxCharts({
+                    canvasId: 'pingCanvas',
+                    type: 'line',
+                    categories: that.data.canvasLabels,
+                    series: [{
+                        name: "网络延时（ms）",
+                        format: function (val) {
+                            return val.toFixed(0);
+                        },
+                        data: that.data.pingDelay,
+                    }],
+
+                    yAxis: {
+                        title: '网络延时（ms）',
+                        format: function (val) {
+                            return val.toFixed(1);
+                        },
+                        min: 0
+                    },
+                    dataLabel: false,
+                    width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                    height: 180,
+                    animation: false
+                });
+            })
+        }
+
+        /** 绘制RSSI走势图 */
+        if (that.data.rssi.length > 0) {
+            app.deviceInfo.then(function (deviceInfo) {
+                console.log('设备信息', deviceInfo)
+                new wxCharts({
+                    canvasId: 'rssiCanvas',
+                    type: 'line',
+                    categories: that.data.canvasLabels,
+                    series: [{
+                        name: "RSSI(dBm)",
+                        format: function (val) {
+                            return val.toFixed(0);
+                        },
+                        data: that.data.rssi,
+                    }],
+
+                    yAxis: {
+                        title: 'RSSI(dBm)',
+                        format: function (val) {
+                            return val.toFixed(1);
+                        },
+                        min: 0
+                    },
+                    dataLabel: false,
+                    width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                    height: 180,
+                    animation: false
+                });
+            })
+        }
+
+        /** 绘制SNR走势图 */
+        if (that.data.snr.length > 0) {
+            app.deviceInfo.then(function (deviceInfo) {
+                console.log('设备信息', deviceInfo)
+                new wxCharts({
+                    canvasId: 'snrCanvas',
+                    type: 'line',
+                    categories: that.data.canvasLabels,
+                    series: [{
+                        name: "SNR",
+                        format: function (val) {
+                            return val.toFixed(0);
+                        },
+                        data: that.data.snr,
+                    }],
+
+                    yAxis: {
+                        title: 'SNR',
+                        format: function (val) {
+                            return val.toFixed(1);
+                        },
+                        min: 0
+                    },
+                    dataLabel: false,
+                    width: Math.floor((deviceInfo.windowWidth) * 0.95), //canvas宽度
+                    height: 180,
+                    animation: false
+                });
+            })
+        }
     },
     /**
      * 对话框取消按钮点击事件
