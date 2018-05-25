@@ -204,62 +204,62 @@ Page({
                         bat_vol: voltage + " V",
                     })
 
-                    if (voltage > 4.2) {
+                    if (voltage >= 4.2) {
                         that.setData({
                             battery: "100%",
                         })
                     }
-                    else if (voltage > 4.08) {
+                    else if (voltage >= 4.08) {
                         that.setData({
                             battery: "90%",
                         })
                     }
-                    else if (voltage > 4) {
+                    else if (voltage >= 4) {
                         that.setData({
                             battery: "80%",
                         })
                     }
-                    else if (voltage > 3.93) {
+                    else if (voltage >= 3.93) {
                         that.setData({
                             battery: "70%",
                         })
                     }
-                    else if (voltage > 3.87) {
+                    else if (voltage >= 3.87) {
                         that.setData({
                             battery: "60%",
                         })
                     }
-                    else if (voltage > 3.82) {
+                    else if (voltage >= 3.82) {
                         that.setData({
                             battery: "50%",
                         })
                     }
-                    else if (voltage > 3.79) {
+                    else if (voltage >= 3.79) {
                         that.setData({
                             battery: "40%",
                         })
                     }
-                    else if (voltage > 3.77) {
+                    else if (voltage >= 3.77) {
                         that.setData({
                             battery: "30%",
                         })
                     }
-                    else if (voltage > 3.73) {
+                    else if (voltage >= 3.73) {
                         that.setData({
                             battery: "20%",
                         })
                     }
-                    else if (voltage > 3.7) {
+                    else if (voltage >= 3.7) {
                         that.setData({
                             battery: "15%",
                         })
                     }
-                    else if (voltage > 3.68) {
+                    else if (voltage >= 3.68) {
                         that.setData({
                             battery: "10%",
                         })
                     }
-                    else if (voltage > 3.5) {
+                    else if (voltage >= 3.5) {
                         that.setData({
                             battery: "5%",
                         })
